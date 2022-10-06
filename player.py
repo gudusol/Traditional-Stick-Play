@@ -8,7 +8,12 @@ class player:
 
     def __init__(self, team):
         self.team = team
-        self.tokens = [token(), token(), token(), token()]
+        self.tokens = [
+            token(self.team),
+            token(self.team),
+            token(self.team),
+            token(self.team),
+        ]
 
     # 나중에 윷리스트는 게임으로 옮기고 yut_list를 throw 함수의 인자로 받음
     yut_list = [yut(), yut(), yut(), yut()]
