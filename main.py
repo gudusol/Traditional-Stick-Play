@@ -2,7 +2,7 @@ from player import player
 from token import token
 
 p1 = player("red")
-p2 = player("red")
+p2 = player("blue")
 
 # for i in range(100):
 #     print(f"p1: {p1.throw()}, p2: {p2.throw()}")
