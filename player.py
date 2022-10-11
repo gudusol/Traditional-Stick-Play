@@ -16,9 +16,8 @@ class player:
         ]
 
     # 나중에 윷리스트는 게임으로 옮기고 yut_list를 throw 함수의 인자로 받음
-    yut_list = [yut(), yut(), yut(), yut()]
 
-    def throw(self):
+    def throw(self, yut_list):
         li = [i.throw() for i in self.yut_list]
 
         if li.count("등") == 4:
