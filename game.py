@@ -1,4 +1,6 @@
 from yut import yut
+from board import board
+
 
 class game:
     winner = "" #승리자 string형 변수 처음에는 null
@@ -6,12 +8,15 @@ class game:
     yut_list = []
 
 
-    def __init__(self,):
+    def __init__(self):
         self.yut_list = [yut(),yut(),yut(),yut()]
 
 
     def game_start(): #게임을 구동하는 함수
         while(True):
+            
+
+        return 0
 
 
     def game_over(self): #승리 조건을 판단하고 게임을 종료
@@ -26,3 +31,7 @@ class game:
             self.turn = 0
         else:
             self.turn = 1
+
+    def game_title(self):
+
+        
