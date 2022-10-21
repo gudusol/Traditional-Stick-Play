@@ -7,9 +7,5 @@ from board import board
 b = board()
 li = b.tile_list
 
-
-for i in li:
-    print(f"{i.index}번째 칸에서 이동: ", end="")
-    for j in range(5):
-        print(f"{j+1}: {i.get_dest_index(j+1)}   ", end="")
-    print()
+b = board()
+b.show_board()
