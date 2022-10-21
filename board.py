@@ -1,6 +1,6 @@
 from tile import tile
 from player import player
-from token import token
+from piece import piece
 from gotoxy import gotoxy
 
 

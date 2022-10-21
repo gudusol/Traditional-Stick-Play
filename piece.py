@@ -1,4 +1,4 @@
-class token:
+class piece:
     idx = 0
     team = ""
 

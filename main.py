@@ -1,11 +1,10 @@
-from token import token
 from board import board
+from game import game
 
 # for i in range(100):
-#     print(f"p1: {p1.throw()}, p2: {p2.throw()}")
+#     print(f"p1: {p1
+# .throw()}, p2: {p2.throw()}")
 
-b = board()
-li = b.tile_list
+g = game()
 
-b = board()
-b.show_board()
+g.game_title()
