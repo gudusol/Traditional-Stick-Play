@@ -1,15 +1,14 @@
-from player import player
 from token import token
-
-p1 = player("red")
-p2 = player("blue")
+from board import board
 
 # for i in range(100):
 #     print(f"p1: {p1.throw()}, p2: {p2.throw()}")
 
-t = token("red")
-print(t.get_index())
-t.set_index(20)
-print(t.get_index())
-t.set_index(40)
-print(t.get_index())
+b = board()
+li = b.tile_list
+
+for i in li:
+    print(f"{i.index}번째 칸에서 이동: ", end="")
+    for j in range(5):
+        print(f"{j+1}: {i.get_dest_index(j+1)}   ", end="")
+    print()

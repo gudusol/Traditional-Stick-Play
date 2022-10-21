@@ -8,7 +8,7 @@ class board:
 
     def __init__(self):
         for i in range(29):
-            self.tile_list.append(tile())
+            self.tile_list.append(tile(i + 1))
 
     def move_token(self, token, yut_result):
         if token.get_index() == "골인":
