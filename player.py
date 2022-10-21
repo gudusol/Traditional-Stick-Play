@@ -42,3 +42,6 @@ class player:
             if i.is_goal_in:
                 count += 1
         return count
+
+    def get_tokenlist(self):
+        return self.tokens

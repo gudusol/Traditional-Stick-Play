@@ -2,6 +2,7 @@ from tile import tile
 from player import player
 from piece import piece
 from gotoxy import gotoxy
+import os
 
 
 class board:
@@ -33,6 +34,7 @@ class board:
             print("❹   ", end="")
 
     def show_board(self):
+        os.system("cls")
         for i in range(6):
             self.print_tile(11 - i)
         print("\n")
@@ -68,3 +70,18 @@ class board:
         for i in range(5):
             self.print_tile(16 + i)
         self.print_tile(1)
+
+    def show_tokens_state(self, player1: player, player2: player):
+        player1_token_list = player1.get_tokenlist()
+        player2_token_list = player2.get_tokenlist()
+        gotoxy(27, 0)
+        print(player1.get_team() + " 팀")
+        for i in range(len(player1_token_list)):  # 각 플레이어의 말 상태 출력
+            gotoxy(27, i + 1)
+            print("%d 번 말 : %d" % (i, player1_token_list[i].get_index()))
+        gotoxy(38, 0)
+        print("| " + player2.get_team() + " 팀")
+        for i in range(len(player2_token_list)):
+            gotoxy(38, i + 1)
+            print("| %d 번 말 : %d" % (i, player2_token_list[i].get_index()))
+        gotoxy(0, 15)
