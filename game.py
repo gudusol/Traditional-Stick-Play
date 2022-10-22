@@ -8,6 +8,7 @@ from gotoxy import gotoxy
 import keyboard
 import os
 
+
 x = 10  # gotoxy x좌표
 y = 1  # gotoxy y좌표
 
@@ -38,10 +39,9 @@ class game:
             b.show_board()
             b.show_pieces_state(player_list[0], player_list[1], self.turn)
 
-
             gotoxy(27, 12)
             print("던지기 :")
-            gotoxy(35, 12)
+            gotoxy(35, 31)
             s = input()  # 윷 던지는 변수 아래는 예외 처리
             if (
                 s == "던지기"
@@ -101,7 +101,6 @@ class game:
             os.system("cls")
             b.show_board()
             b.show_pieces_state(player_list[0], player_list[1], self.turn)
-
 
             # 움직일 말 번호 및 어떤 결과로 이동할 지 입력
 
@@ -232,8 +231,6 @@ class game:
                 gotoxy(cursor_x, cursor_y)
                 print("◀")
                 gotoxy(cursor_x, cursor_y)
-
-            
 
             elif input_key == "enter" and cursor_y == 6:  # START
                 os.system("cls")

@@ -2,6 +2,7 @@ from tile import tile
 from player import player
 from piece import piece
 from gotoxy import gotoxy
+import time
 import os
 
 GOALIN = 0
@@ -69,79 +70,81 @@ class board:
     def print_tile(self, idx):
         num_of_pieces = len(self.tile_list[idx - 1].get_pieces())
         if num_of_pieces == 0:
-            print("■    ", end="")
+            print("■  ", end="")
         elif num_of_pieces == 1:
-            print("❶   ", end="")
+            print("❶  ", end="")
         elif num_of_pieces == 2:
-            print("❷   ", end="")
+            print("❷  ", end="")
         elif num_of_pieces == 3:
-            print("❸   ", end="")
+            print("❸  ", end="")
         else:
-            print("❹   ", end="")
+            print("❹  ", end="")
 
     def show_board(self):
-        gotoxy(0, 0)
         os.system("cls")
+        gotoxy(20, 10)
         for i in range(6):
             self.print_tile(10 - i)
-        print("\n")
+        print()
+        gotoxy(20, 12)
         self.print_tile(11)
         self.print_tile(23)
-        print("          ", end="")
+        print("        ", end="")
         self.print_tile(21)
         self.print_tile(4)
-        print("\n")
+        print()
+        gotoxy(20, 14)
         self.print_tile(12)
-        print("     ", end="")
+        print("    ", end="")
         self.print_tile(24)
         self.print_tile(22)
-        print("     ", end="")
+        print("    ", end="")
         self.print_tile(3)
-        print("             ", end="")
+        print()
+        gotoxy(20, 15)
+        print("          ", end="")
         self.print_tile(25)
+        print()
+        gotoxy(20, 16)
         self.print_tile(13)
-        print("     ", end="")
+        print("    ", end="")
         self.print_tile(28)
         self.print_tile(26)
-        print("     ", end="")
+        print("    ", end="")
         self.print_tile(2)
-        print("\n")
+        print()
+        gotoxy(20, 18)
         self.print_tile(14)
         self.print_tile(29)
-        print("          ", end="")
+        print("        ", end="")
         self.print_tile(27)
         self.print_tile(1)
-        print("\n")
-        for i in range(5):
+        print()
+        gotoxy(20, 20)
+        for i in range(6):
             self.print_tile(15 + i)
-        self.print_tile(20)
+        print()
 
     def show_pieces_state(self, player1: player, player2: player, turn):
         player1_piece_list = player1.get_piecelist()
         player2_piece_list = player2.get_piecelist()
-        gotoxy(28, 0)
+        gotoxy(55, 10)
         print(player1.get_team() + " 팀")
         for i in range(len(player1_piece_list)):  # 각 플레이어의 말 상태 출력
-            gotoxy(28, i + 1)
+            gotoxy(55, i + 11)
             print("%d 번 말 : %d" % (i + 1, player1_piece_list[i].get_index()))
-        gotoxy(39, 0)
+        gotoxy(70, 10)
         print(" | " + player2.get_team() + " 팀")
         for i in range(len(player2_piece_list)):
-            gotoxy(39, i + 1)
+            gotoxy(70, i + 11)
             print(" | %d 번 말 : %d" % (i + 1, player2_piece_list[i].get_index()))
-        gotoxy(0, 15)
-
-        gotoxy(28, 5)
+        gotoxy(55, 16)
         if turn == 1:
             print("[%s의 던진 윷 현황]" % player1.get_team())
-            gotoxy(28, 6)
+            gotoxy(55, 17)
             print(player1.results)
         else:
             print("[%s의 던진 윷 현황]" % player2.get_team())
-            gotoxy(28, 6)
+            gotoxy(55, 17)
             print(player2.results)
         # player1이랑 player2 results 공유되는듯 ㅇㅅㅇ ㅋㅋ몰?루
-
-    def show_yut_result(self, player: player):
-        gotoxy(28, 7)
-        print("윷 결과")
