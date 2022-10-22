@@ -23,22 +23,21 @@ class game:
         self.b = board()
 
     def game_start(self):  # 게임을 구동하는 함수
+        self.game_title()
+        input(" ")
         player_list = []
-        for i in range (0,2):
+        for i in range(0, 2):
             os.system("cls")  # player1 생성
-            gotoxy(x, y + 2)
-            print("Player %d의 이름을 입력해주세요 :" % (i + 1))
-            gotoxy(x + 5, y + 3)
-            player_name = input()
+            player_name = input("Player %d의 이름을 입력해주세요 :" % (i + 1))
             player_list.append(player(player_name))
 
         b = board()
         os.system("cls")
-        
+
         while self.winner is None:  # winner가 정해졌다면 반복 종료
 
             b.show_board()
-            b.show_pieces_state(player_list[0], player_list[1])
+            b.show_pieces_state(player_list[0], player_list[1], self.turn)
 
             gotoxy(27, 12)
             print("던지기 :")
@@ -57,20 +56,42 @@ class game:
                 or s == "th"
                 or s == "t"
             ):
-                player_list[self.turn].results.append(player_list[self.turn].throw(self.yut_list))
-                
+                player_list[self.turn].results.append(
+                    player_list[self.turn].throw(self.yut_list)
+                )
+
                 if (
-                    player_list[self.turn].results[len(player_list[self.turn].results) - 1] == "윷"
-                    or player_list[self.turn].results[len(player_list[self.turn].results) - 1] == "모"
+                    player_list[self.turn].results[
+                        len(player_list[self.turn].results) - 1
+                    ]
+                    == "윷"
+                    or player_list[self.turn].results[
+                        len(player_list[self.turn].results) - 1
+                    ]
+                    == "모"
                 ):
                     gotoxy(27, 11)
-                    print("%s! 한 번더~"%(player_list[self.turn].results[len(player_list[self.turn].results) - 1]))
+                    print(
+                        "%s! 한 번더~"
+                        % (
+                            player_list[self.turn].results[
+                                len(player_list[self.turn].results) - 1
+                            ]
+                        )
+                    )
                     gotoxy(35, 12)
                     sleep(0.5)
                     continue
                 else:
                     gotoxy(27, 11)
-                    print("%s!" %(player_list[self.turn].results[len(player_list[self.turn].results) - 1]))
+                    print(
+                        "%s!"
+                        % (
+                            player_list[self.turn].results[
+                                len(player_list[self.turn].results) - 1
+                            ]
+                        )
+                    )
                     gotoxy(35, 12)
                     sleep(0.5)
             else:
@@ -86,9 +107,9 @@ class game:
             # 상대 말을 잡았는가?
 
             self.move_input(player_list[self.turn])
-        
+
         # 승자가 정해졌다면 게임 종료 함수 호출 (추가 요망)
-            
+
         return 0
 
     def print_help(self):  # 도움말 출력 함수
@@ -105,11 +126,11 @@ class game:
         print("입력한 명령어가 각 프롬프트의 명령어 문법에 위배되는 경우 프로그램이 정상적으로 동작하지 않을 수 있습니다.\n")
         print("esc키를 누르면 이전 화면으로 이동합니다.")
         keyboard.wait("esc")
-        return
+        return 0
 
-
-    def move_input(self, player):           # 움직일 말과 사용할 결과를 입력받아서 말을 움직이는 함수
-        while player.results:               # player의 결과 리스트가 비었다면 반복 종료
+    def move_input(self, player):  # 움직일 말과 사용할 결과를 입력받아서 말을 움직이는 함수
+        while player.results:  # player의 결과 리스트가 비었다면 반복 종료
+            gotoxy(27, 12)
             s = input("이동할 말과 적용할 값을 입력하세요(예시: 3 걸): ")
             s = s.replace(" ", "")
 
@@ -149,25 +170,26 @@ class game:
                 print("잘못된 명령어입니다.")
                 continue
 
-            moved_value = self.b.move_piece(player.pieces[piece_num], result)   # 말 이동, 이동한 결과 저장
-            if moved_value == 1 and result <= 3 :    # 도/개/걸로 잡았을 시 다시 던짐
+            moved_value = self.b.move_piece(
+                player.pieces[piece_num], result
+            )  # 말 이동, 이동한 결과 저장
+            if moved_value == 1 and result <= 3:  # 도/개/걸로 잡았을 시 다시 던짐
                 return
-            elif moved_value == 0 :                 # 골인했을 시 모든 말이 골인했는지 판단
-                if player.goal_in_piece() == 4 :    # 모든 말이 골인했다면 현재 턴인 팀의 승리
+            elif moved_value == 0:  # 골인했을 시 모든 말이 골인했는지 판단
+                if player.goal_in_piece() == 4:  # 모든 말이 골인했다면 현재 턴인 팀의 승리
                     self.winner = self.turn
                     return
 
-            if self.turn == 0 :                     # 잡지도 골인하지도 않았다면 상대 턴으로 넘어감
-                self.turn = 1
-            else :
-                self.turn = 0
-            
-            return 0
+        if self.turn == 0:  # 잡지도 골인하지도 않았다면 상대 턴으로 넘어감
+            self.turn = 1
+        else:
+            self.turn = 0
+
+        return 0
 
     def game_over(self):  # 승리 조건을 판단하고 게임을 종료
         if self.winner is not None:
             return
-            
 
     def change_turn(self):  # 턴이 넘어갈 때 턴이 저장된 변수 값을 바꿈
         if self.turn == 1:
@@ -176,51 +198,58 @@ class game:
             self.turn = 1
 
     def game_title(self):
-        cursor_x = 20
-        cursor_y = 5
+        cursor_x = 25
+        cursor_y = 6
         os.system("cls")
+
+        print("\n\n\t\tTRADITIONAL-STICK-PLAY\n\n\n")
+        print("\t\tSTART\n")
+        print("\t\tQUIT\n")
+        print("\t\tHELP")
+        gotoxy(cursor_x, cursor_y)
+        print("◀", end="")
         while True:
 
-            gotoxy(x, y + 0)
-            print("TRADITIONAL-STICK-PLAY")
-            gotoxy(x, y + 4)
-            print("START")
-            gotoxy(x, y + 6)
-            print("QUIT")
-            gotoxy(x, y + 8)
-            print("HELP")
+            input_key = keyboard.read_key()
+            sleep(0.2)
 
-            gotoxy(cursor_x, cursor_y)
-            print("◀")
-
-            if keyboard.is_pressed(80) and cursor_y < 9:  # 아래쪽 방향키 입력
-                sleep(0.2)
+            if input_key == "down" and cursor_y < 9:  # 아래쪽 방향키 입력
+                cursor_x -= 1
+                gotoxy(cursor_x, cursor_y)
+                print("  ", end="")
+                cursor_x += 1
                 cursor_y += 2
-                os.system("cls")
-            if keyboard.is_pressed(72) and cursor_y > 5:  # 위쪽 방향키 입력
-                sleep(0.2)
+                gotoxy(cursor_x, cursor_y)
+                print("◀", end="")
+            elif input_key == "up" and cursor_y > 6:  # 위쪽 방향키 입력
+                cursor_x -= 1
+                gotoxy(cursor_x, cursor_y)
+                print("  ", end="")
+                cursor_x += 1
                 cursor_y -= 2
-                os.system("cls")
+                gotoxy(cursor_x, cursor_y)
+                print("◀", end="")
 
-            if keyboard.is_pressed("enter") and cursor_y == 5:  # START
+            elif input_key == "enter" and cursor_y == 6:  # START
                 os.system("cls")
                 gotoxy(x, y + 2)
                 print("TRADITIONAL-STICK-PLAY")
                 gotoxy(x + 6, y + 5)
                 print("시작합니다")
                 sleep(1)
+                os.system("cls")
 
                 return 0  # 리턴 값으로 다른 동작 수행?
 
-            if keyboard.is_pressed("enter") and cursor_y == 7:  # QUIT
+            elif input_key == "enter" and cursor_y == 8:  # QUIT
                 os.system("cls")
                 gotoxy(x, y + 2)
                 print("TRADITIONAL-STICK-PLAY")
                 gotoxy(x + 6, y + 5)
                 print("종료합니다")
                 sleep(1)
-                return 0
+                exit(0)
 
-            if keyboard.is_pressed("enter") and cursor_y == 9:  # HELP
-                print("help")
-                return 0
+            elif input_key == "enter" and cursor_y == 10:  # HELP
+                self.print_help()
+                self.game_title()

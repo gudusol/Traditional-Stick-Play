@@ -33,7 +33,7 @@ class board:
                     ret = CATCH  # i값을 catch로 설정
                 else:  # 엎히기
                     ret = CARRY
-            dest_tile.reach_pieces(piece)
+            dest_tile.reach_piece(piece)
             piece.set_index(dest)
         else:
             dest = self.tile_list[piece.get_index() - 1].get_dest_index(
@@ -60,7 +60,7 @@ class board:
                     #     i.set_index(dest)
                     ret = CARRY
             dest_tile.set_pieces(dest_pieces + start_tile.get_pieces())
-            start_tile.set_pieces([])
+            start_tile.set_piece([])
             for i in dest_pieces:
                 i.set_index(dest)
 
