@@ -30,7 +30,7 @@ class game:
         p1_name = input()
         p1 = player(p1_name)
 
-        os.system("cls") # player2 생성
+        os.system("cls")  # player2 생성
         gotoxy(x, y + 2)
         print("Player 2의 이름을 입력해주세요 :")
         gotoxy(x + 5, y + 3)
@@ -40,11 +40,11 @@ class game:
         b = board()
 
         os.system("cls")
-        
+
         while self.turn == 1:  # player1 턴
 
             b.show_board()
-            b.show_pieces_state(p1, p2)
+            b.show_pieces_state(p1, p2, self.turn)
 
             gotoxy(27, 12)
             print("던지기 :")
@@ -64,27 +64,26 @@ class game:
                 or s == "t"
             ):
                 p1.results.append(p1.throw(self.yut_list))
-                
+
                 if (
                     p1.results[len(p1.results) - 1] == "윷"
                     or p1.results[len(p1.results) - 1] == "모"
                 ):
                     gotoxy(27, 11)
-                    print("%s! 한 번더~"%(p1.results[len(p1.results) - 1]))
+                    print("%s! 한 번더~" % (p1.results[len(p1.results) - 1]))
                     gotoxy(35, 12)
-                    sleep(1)
+                    sleep(0.5)
                     continue
                 else:
                     gotoxy(27, 11)
-                    print("%s!" %(p1.results[len(p1.results) - 1]))
+                    print("%s!" % (p1.results[len(p1.results) - 1]))
                     gotoxy(35, 12)
-                    sleep(1)
+                    sleep(0.5)
             else:
                 print("올바른 명령어를 입력해주세요")
                 continue  # 윷 던지기 끝
-            
-            # 움직일 말 번호 및 어떤 결과로 이동할 지 입력
 
+            # 움직일 말 번호 및 어떤 결과로 이동할 지 입력
 
             # 해당 말이 골인하지 않았고 저장되어있는 결과인가?
 
@@ -101,12 +100,14 @@ class game:
             # 상대턴으로 넘어감
         return 0
 
-    def print_help(self):       # 도움말 출력 함수
+    def print_help(self):  # 도움말 출력 함수
         os.system("cls")
         print("전통 막대기 놀이 : TRADITIONAL STICK PLAY")
         print("우리 나라의 민속놀이인 윷놀이 게임 프로그램입니다.\n")
         print("### 게임 규칙 ###")
-        print("두 명의 플레이어가 번갈아가며 윷을 던져 나온 결과로 4개의 말을 움직입니다. \n윷을 던진 결과로 윷이나 모가 나오면 한 번 더 던질 수 있습니다.")
+        print(
+            "두 명의 플레이어가 번갈아가며 윷을 던져 나온 결과로 4개의 말을 움직입니다. \n윷을 던진 결과로 윷이나 모가 나오면 한 번 더 던질 수 있습니다."
+        )
         print("4개의 말을 먼저 모두 골인시키는 플레이어가 승리합니다.\n상대방의 말을 잡거나 본인의 말에 업힐 수 있습니다.\n")
         print("### 조작 방법 ###")
         print("키보드를 통한 명령어 입력 후 Enter 키를 누르면 동작합니다.")
@@ -114,7 +115,6 @@ class game:
         print("esc키를 누르면 이전 화면으로 이동합니다.")
         keyboard.wait("esc")
         return
-
 
     def move_input(self, player):  # 움직일 말과 사용할 결과를 입력받아서 말을 움직이는 함수
         while player.results:  # player의 결과 리스트가 비었다면 반복 종료

@@ -1,3 +1,4 @@
+from turtle import goto
 from tile import tile
 from player import player
 from piece import piece
@@ -111,7 +112,7 @@ class board:
         self.print_tile(1)
         print("\n")
 
-    def show_pieces_state(self, player1: player, player2: player):
+    def show_pieces_state(self, player1: player, player2: player, turn):
         player1_piece_list = player1.get_piecelist()
         player2_piece_list = player2.get_piecelist()
         gotoxy(28, 0)
@@ -124,9 +125,17 @@ class board:
         for i in range(len(player2_piece_list)):
             gotoxy(39, i + 1)
             print(" | %d 번 말 : %d" % (i + 1, player2_piece_list[i].get_index()))
-        
+
         gotoxy(28, 5)
-        print(player1.results) # player1이랑 player2 results 공유되는듯 ㅇㅅㅇ
+        if turn == 1:
+            print("[%s의 던진 윷 현황]" % player1.get_team())
+            gotoxy(28, 6)
+            print(player1.results)
+        else:
+            print("[%s의 던진 윷 현황]" % player2.get_team())
+            gotoxy(28, 6)
+            print(player2.results)
+        # player1이랑 player2 results 공유되는듯 ㅇㅅㅇ ㅋㅋ몰?루
 
     def show_yut_result(self, player: player):
         gotoxy(28, 7)
