@@ -1,13 +1,11 @@
+import keyboard
 from statistics import mode
 from yut import yut
 from board import board
 from player import player
 from time import sleep
 from gotoxy import gotoxy
-import keyboard
-import sys
 import os
-
 
 x = 10  # gotoxy x좌표
 y = 1  # gotoxy y좌표
@@ -37,13 +35,25 @@ class game:
         self.turn = 0
         self.yut_list = [yut(), yut(), yut(), yut()]
         self.b = board()
+        self.player_list = []
 
     def game_start(self):  # 게임을 구동하는 함수
         self.game_title()
         flush_input()
-        for i in range(0, 2):
+        player_idx = 0
+        while player_idx < 2:
             os.system("cls")  # player1 생성
-            player_name = input("Player %d의 이름을 입력해주세요 :" % (i + 1))
+            player_name = input(f"Player {player_idx+1}의 이름을 입력해주세요 :")
+            if player_name == "" or len(player_name) > 10:
+                print("이름은 1자 이상 10자 이하로 입력해주세요.")
+                sleep(2)
+                continue
+            if player_idx == 1:
+                if self.player_list[0].get_team() == player_name:
+                    print("이미 같은 이름의 팀이 있습니다.")
+                    sleep(2)
+                    continue
+            player_idx += 1
             self.player_list.append(player(player_name))
 
         os.system("cls")
@@ -126,6 +136,19 @@ class game:
                         sleep(2)
                 continue
 
+            elif (
+                s == "help"
+                or s == "hel"
+                or s == "he"
+                or s == "h"
+                or s == "도움말"
+                or s == "도움"
+                or s == "ㄷㅇㅁ"
+                or s == "ㄷㅇ"
+            ):
+                # help 명령어 처리
+                self.print_help()
+                continue
             else:
                 gotoxy(55, 21)
                 print("올바른 명령어를 입력해주세요")
@@ -233,7 +256,7 @@ class game:
 
             if moved_value == 0:
                 if player.goal_in_piece() == 4:  # 골인한 말이 4개라면 승리
-                    self.winner = player
+                    self.winner = self.turn
                     return
             elif moved_value == 1:
                 continue
@@ -260,7 +283,7 @@ class game:
             os.system("cls")
             print(self.player_list[self.winner].team, "의 승리!!")
             sleep(3)
-            return
+            return 0
 
     def change_turn(self):  # 턴이 넘어갈 때 턴이 저장된 변수 값을 바꿈
         if self.turn == 1:
