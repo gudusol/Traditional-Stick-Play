@@ -1,4 +1,5 @@
 import re
+from statistics import mode
 from yut import yut
 from board import board
 from player import player
@@ -38,7 +39,6 @@ class game:
         p2 = player(p2_name)
 
         b = board()
-
         os.system("cls")
 
         while self.turn == 1:  # player1 턴
