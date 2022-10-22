@@ -13,8 +13,8 @@ y = 1  # gotoxy y좌표
 
 
 class game:
-    winner = ""  # 승리자 string형 변수 처음에는 null
-    turn = 1  # 현재 턴 int형 변수, 1p부터 시작함, 2p turn은 2
+    winner = None  # 승리자 string형 변수 처음에는 null
+    turn = 0  # 현재 턴 int형 변수, 1p부터 시작함, 2p turn은 2
     yut_list = []
     b = None
 
@@ -23,28 +23,22 @@ class game:
         self.b = board()
 
     def game_start(self):  # 게임을 구동하는 함수
-        os.system("cls")  # player1 생성
-
-        gotoxy(x, y + 2)
-        print("Player 1의 이름을 입력해주세요 :")
-        gotoxy(x + 5, y + 3)
-        p1_name = input()
-        p1 = player(p1_name)
-
-        os.system("cls")  # player2 생성
-        gotoxy(x, y + 2)
-        print("Player 2의 이름을 입력해주세요 :")
-        gotoxy(x + 5, y + 3)
-        p2_name = input()
-        p2 = player(p2_name)
+        player_list = []
+        for i in range (0,2):
+            os.system("cls")  # player1 생성
+            gotoxy(x, y + 2)
+            print("Player %d의 이름을 입력해주세요 :" % (i + 1))
+            gotoxy(x + 5, y + 3)
+            player_name = input()
+            player_list.append(player(player_name))
 
         b = board()
         os.system("cls")
+        
+        while self.winner is None:  # winner가 정해졌다면 반복 종료
 
-        while self.turn == 1:  # player1 턴
-
-            self.b.show_board()
-            self.b.show_pieces_state(p1, p2, self.turn)
+            b.show_board()
+            b.show_pieces_state(player_list[0], player_list[1])
 
             gotoxy(27, 12)
             print("던지기 :")
@@ -63,20 +57,20 @@ class game:
                 or s == "th"
                 or s == "t"
             ):
-                p1.results.append(p1.throw(self.yut_list))
-
+                player_list[self.turn].results.append(player_list[self.turn].throw(self.yut_list))
+                
                 if (
-                    p1.results[len(p1.results) - 1] == "윷"
-                    or p1.results[len(p1.results) - 1] == "모"
+                    player_list[self.turn].results[len(player_list[self.turn].results) - 1] == "윷"
+                    or player_list[self.turn].results[len(player_list[self.turn].results) - 1] == "모"
                 ):
                     gotoxy(27, 11)
-                    print("%s! 한 번더~" % (p1.results[len(p1.results) - 1]))
+                    print("%s! 한 번더~"%(player_list[self.turn].results[len(player_list[self.turn].results) - 1]))
                     gotoxy(35, 12)
                     sleep(0.5)
                     continue
                 else:
                     gotoxy(27, 11)
-                    print("%s!" % (p1.results[len(p1.results) - 1]))
+                    print("%s!" %(player_list[self.turn].results[len(player_list[self.turn].results) - 1]))
                     gotoxy(35, 12)
                     sleep(0.5)
             else:
@@ -84,9 +78,6 @@ class game:
                 continue  # 윷 던지기 끝
 
             # 움직일 말 번호 및 어떤 결과로 이동할 지 입력
-            self.move_input(p1)
-            self.b.show_board()
-            self.b.show_pieces_state(p1, p2)
 
             # 해당 말이 골인하지 않았고 저장되어있는 결과인가?
 
@@ -94,13 +85,10 @@ class game:
 
             # 상대 말을 잡았는가?
 
-            # 본인 말이 업혔는가?
-
-            # 도착 위치가 출발점을 넘어갔는가?
-
-            # 사용할 결과가 남았는가?
-
-            # 상대턴으로 넘어감
+            self.move_input(player_list[self.turn])
+        
+        # 승자가 정해졌다면 게임 종료 함수 호출 (추가 요망)
+            
         return 0
 
     def print_help(self):  # 도움말 출력 함수
@@ -119,8 +107,9 @@ class game:
         keyboard.wait("esc")
         return
 
-    def move_input(self, player):  # 움직일 말과 사용할 결과를 입력받아서 말을 움직이는 함수
-        while player.results:  # player의 결과 리스트가 비었다면 반복 종료
+
+    def move_input(self, player):           # 움직일 말과 사용할 결과를 입력받아서 말을 움직이는 함수
+        while player.results:               # player의 결과 리스트가 비었다면 반복 종료
             s = input("이동할 말과 적용할 값을 입력하세요(예시: 3 걸): ")
             s = s.replace(" ", "")
 
@@ -160,13 +149,25 @@ class game:
                 print("잘못된 명령어입니다.")
                 continue
 
-            self.b.move_piece(player.pieces[piece_num], result)  # 말 이동
+            moved_value = self.b.move_piece(player.pieces[piece_num], result)   # 말 이동, 이동한 결과 저장
+            if moved_value == 1 and result <= 3 :    # 도/개/걸로 잡았을 시 다시 던짐
+                return
+            elif moved_value == 0 :                 # 골인했을 시 모든 말이 골인했는지 판단
+                if player.goal_in_piece() == 4 :    # 모든 말이 골인했다면 현재 턴인 팀의 승리
+                    self.winner = self.turn
+                    return
+
+            if self.turn == 0 :                     # 잡지도 골인하지도 않았다면 상대 턴으로 넘어감
+                self.turn = 1
+            else :
+                self.turn = 0
+            
+            return 0
 
     def game_over(self):  # 승리 조건을 판단하고 게임을 종료
-        if self.winner == "":
-            return 0  # 계속 게임 진행
-        else:
-            return self.winner  # 승리자 이름 리턴하고 게임 종료
+        if self.winner is not None:
+            return
+            
 
     def change_turn(self):  # 턴이 넘어갈 때 턴이 저장된 변수 값을 바꿈
         if self.turn == 1:
