@@ -33,14 +33,6 @@ class player:
         else:
             return "error"
 
-    def move_piece(self, piece, yut_result):
-        if piece.get_index() == "골인":  # 움직이려는 말이 이미 골인한 말일 때
-            return -1
-        else:
-            result = self.tile_list[piece.get_index()].get_dest_index(yut_result)
-            piece.set_index(result)
-            self.tile_list[result].reach_piece(piece)
-
     def get_team(self):
         return self.team
 
