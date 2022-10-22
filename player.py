@@ -44,5 +44,5 @@ class player:
                 count += 1
         return count
 
-    def get_tokenlist(self):
-        return self.tokens
+    def get_piecelist(self):
+        return self.pieces
