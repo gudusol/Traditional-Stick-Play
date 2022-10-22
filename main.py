@@ -1,5 +1,4 @@
 from board import board
-from game import game
 from player import player
 
 # for i in range(100):
