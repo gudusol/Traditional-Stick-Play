@@ -1,9 +1,13 @@
+from piece import piece
+
 class tile:
     index = 0
     pieces = []
 
     def __init__(self, index):
         self.index = index
+        self.pieces = [piece(" ")]
+        self.pieces.clear()
 
     def set_pieces(self, pieces):
         self.pieces = pieces
@@ -12,6 +16,8 @@ class tile:
     def get_pieces(self):
         return self.pieces
 
+    def get_num_pieces(self):
+        return len(self.pieces)
     def reach_piece(self, piece):
         self.pieces.append(piece)
 

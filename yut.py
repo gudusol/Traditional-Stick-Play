@@ -3,7 +3,7 @@ import random
 
 class yut:
     value = ""
-
+    
     def get_value(self):
         return self.value
 

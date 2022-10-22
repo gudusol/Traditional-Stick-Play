@@ -8,6 +8,3 @@ class bcolors:
     ENDC = "\033[0m"
     BOLD = "\033[1m"
     UNDERLINE = "\033[4m"
-
-
-print(f"{bcolors.WARNING}❶ ❷ ❸ ❹{bcolors.ENDC}")

@@ -13,8 +13,12 @@ CARRY = 3
 
 class board:
     tile_list = []  # 칸의 배열
+    color_list = ['\033[31m', '\033[34m'] #color 배열 순서대로 0 : red , 1 : blue
+    team_list = []
 
     def __init__(self):
+        self.tile_list = [tile(-1)]
+        self.tile_list.pop()
         for i in range(29):
             self.tile_list.append(tile(i + 1))
 
@@ -67,62 +71,73 @@ class board:
 
         return ret
 
-    def print_tile(self, idx):
-        num_of_pieces = len(self.tile_list[idx - 1].get_pieces())
+    def print_tile(self, idx, p1:player, p2:player):
+        num_of_pieces = self.tile_list[idx - 1].get_num_pieces() #타일 안에 있는 pieces의 갯수
         if num_of_pieces == 0:
             print("■  ", end="")
-        elif num_of_pieces == 1:
-            print("❶  ", end="")
-        elif num_of_pieces == 2:
-            print("❷  ", end="")
-        elif num_of_pieces == 3:
-            print("❸  ", end="")
         else:
-            print("❹  ", end="")
+            if self.tile_list[idx - 1].pieces[0].get_team() == p1.get_team():
+                if num_of_pieces == 1:
+                    print(self.color_list[0] + "❶  " + '\033[0m', end="") # reset
+                elif num_of_pieces == 2:
+                    print(self.color_list[0] + "❷  " + '\033[0m', end="")
+                elif num_of_pieces == 3:
+                    print(self.color_list[0] + "❸  " + '\033[0m', end="")
+                else:
+                    print(self.color_list[0] + "❹  " + '\033[0m', end="")
+            else:
+                if num_of_pieces == 1:
+                    print(self.color_list[1] + "❶  " + '\033[0m', end="") # reset
+                elif num_of_pieces == 2:
+                    print(self.color_list[1] + "❷  " + '\033[0m', end="")
+                elif num_of_pieces == 3:
+                    print(self.color_list[1] + "❸  " + '\033[0m', end="")
+                else:
+                    print(self.color_list[1] + "❹  " + '\033[0m', end="")
 
-    def show_board(self):
+    def show_board(self, p1:player, p2:player):
         os.system("cls")
         gotoxy(20, 10)
         for i in range(6):
-            self.print_tile(10 - i)
+            self.print_tile(10 - i, p1, p2)
         print()
         gotoxy(20, 12)
-        self.print_tile(11)
-        self.print_tile(23)
+        self.print_tile(11, p1, p2)
+        self.print_tile(23, p1, p2)
         print("        ", end="")
-        self.print_tile(21)
-        self.print_tile(4)
+        self.print_tile(21, p1, p2)
+        self.print_tile(4, p1, p2)
         print()
         gotoxy(20, 14)
-        self.print_tile(12)
+        self.print_tile(12, p1, p2)
         print("    ", end="")
-        self.print_tile(24)
-        self.print_tile(22)
+        self.print_tile(24, p1, p2)
+        self.print_tile(22, p1, p2)
         print("    ", end="")
-        self.print_tile(3)
+        self.print_tile(3, p1, p2)
         print()
         gotoxy(20, 15)
         print("          ", end="")
-        self.print_tile(25)
+        self.print_tile(25, p1, p2)
         print()
         gotoxy(20, 16)
-        self.print_tile(13)
+        self.print_tile(13, p1, p2)
         print("    ", end="")
-        self.print_tile(28)
-        self.print_tile(26)
+        self.print_tile(28, p1, p2)
+        self.print_tile(26, p1, p2)
         print("    ", end="")
-        self.print_tile(2)
+        self.print_tile(2, p1, p2)
         print()
         gotoxy(20, 18)
-        self.print_tile(14)
-        self.print_tile(29)
+        self.print_tile(14, p1, p2)
+        self.print_tile(29, p1, p2)
         print("        ", end="")
-        self.print_tile(27)
-        self.print_tile(1)
+        self.print_tile(27, p1, p2)
+        self.print_tile(1, p1, p2)
         print()
         gotoxy(20, 20)
         for i in range(6):
-            self.print_tile(15 + i)
+            self.print_tile(15 + i, p1, p2)
         print()
 
     def show_pieces_state(self, player1: player, player2: player, turn):
@@ -139,7 +154,7 @@ class board:
             gotoxy(70, i + 11)
             print(" | %d 번 말 : %d" % (i + 1, player2_piece_list[i].get_index()))
         gotoxy(55, 16)
-        if turn == 1:
+        if turn == 0:
             print("[%s의 던진 윷 현황]" % player1.get_team())
             gotoxy(55, 17)
             print(player1.results)
@@ -147,4 +162,3 @@ class board:
             print("[%s의 던진 윷 현황]" % player2.get_team())
             gotoxy(55, 17)
             print(player2.results)
-        # player1이랑 player2 results 공유되는듯 ㅇㅅㅇ ㅋㅋ몰?루

@@ -1,4 +1,3 @@
-import re
 from statistics import mode
 from yut import yut
 from board import board
@@ -8,10 +7,8 @@ from gotoxy import gotoxy
 import keyboard
 import os
 
-
 x = 10  # gotoxy x좌표
 y = 1  # gotoxy y좌표
-
 
 class game:
     winner = None  # 승리자 string형 변수 처음에는 null
@@ -20,6 +17,8 @@ class game:
     b = None
 
     def __init__(self):
+        self.winner = None
+        self.turn = 0
         self.yut_list = [yut(), yut(), yut(), yut()]
         self.b = board()
 
@@ -36,7 +35,7 @@ class game:
         os.system("cls")
 
         while self.winner is None:  # winner가 정해졌다면 반복 종료
-            b.show_board()
+            b.show_board(player_list[0], player_list[1])
             b.show_pieces_state(player_list[0], player_list[1], self.turn)
 
             gotoxy(27, 12)
@@ -99,7 +98,7 @@ class game:
                 sleep(1)
                 continue  # 윷 던지기 끝
             os.system("cls")
-            b.show_board()
+            b.show_board(player_list[0], player_list[1])
             b.show_pieces_state(player_list[0], player_list[1], self.turn)
 
             # 움직일 말 번호 및 어떤 결과로 이동할 지 입력

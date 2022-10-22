@@ -1,22 +1,20 @@
 from yut import yut
 from piece import piece
 
-
 class player:
     team = ""
-    pieces = []
-    results = []                # 윷 던진 결과 임시저장 리스트
+    pieces = []      # 4개의 말을 관리하는 리스트
+    results = []     # 윷 던진 결과 임시저장 리스트 추가
 
     def __init__(self, team):
-        self.team = team
+        self.team = str(team)
         self.pieces = [
             piece(self.team),
             piece(self.team),
             piece(self.team),
             piece(self.team),
         ]
-
-    # 나중에 윷리스트는 게임으로 옮기고 yut_list를 throw 함수의 인자로 받음
+        self.results = []
 
     def throw(self, yut_list):
         li = [i.throw() for i in yut_list]

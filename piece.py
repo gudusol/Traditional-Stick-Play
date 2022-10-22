@@ -3,6 +3,7 @@ class piece:
     team = ""
 
     def __init__(self, team):
+        self.idx = 0
         self.team = str(team)
 
     def set_index(self, idx):

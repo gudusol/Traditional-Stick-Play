@@ -1,5 +1,7 @@
 from game import game
-
+from player import player
+from board import board
+import os
 
 cmd = "mode 100, 40"
 os.system(cmd)
