@@ -39,17 +39,33 @@ class game:
         os.system("cls")
         while(self.turn == 1): # player1 턴 
             print("던지세요 :")
-            if(input() == "던진다"): # 윷 던지기 시작
+            s = input() #윷 던지는 변수 아래는 예외 처리
+            if s == "던진다" or s == "던지" or s == "던" or s == "ㄷㅈㄱ" or s == "ㄷㅈ" or s == "ㄷ" or s == "throw" or s == "thro" or s == "thr" or s == "th" or s == "t" :
                 p1.results.append(p1.throw(self.yut_list))
                 print(p1.results)
                 if(p1.results[len(p1.results) - 1] == "윷" or p1.results[len(p1.results) - 1] == "모"):
+                    print("윷 모! 한 번더~")
                     continue
             else:
                 print("올바른 명령어를 입력해주세요")
                 continue # 윷 던지기 끝
             
             
+            #움직일 말 번호 및 어떤 결과로 이동할 지 입력
 
+            #해당 말이 골인하지 않았고 저장되어있는 결과인가?
+
+            #말 이동 및 사용한 결과 삭제
+            
+            #상대 말을 잡았는가?
+
+            #본인 말이 업혔는가?
+
+            #도착 위치가 출발점을 넘어갔는가?
+
+            #사용할 결과가 남았는가?
+
+            # 상대턴으로 넘어감
             break
         return 0
 
