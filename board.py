@@ -12,23 +12,15 @@ class board:
         for i in range(29):
             self.tile_list.append(tile(i + 1))
 
-    def move_token(self, token, yut_result):
-        if token.get_index() == "골인":
-            return 0
-        else:
-            result = self.tile_list[token.get_index()].get_dest_index(yut_result)
-            token.set_index(result)
-            self.tile_list[result].reach_token(token)
-
     def print_tile(self, idx):
-        num_of_tokens = len(self.tile_list[idx - 1].get_tokens())
-        if num_of_tokens == 0:
+        num_of_pieces = len(self.tile_list[idx - 1].get_pieces())
+        if num_of_pieces == 0:
             print("■    ", end="")
-        elif num_of_tokens == 1:
+        elif num_of_pieces == 1:
             print("❶   ", end="")
-        elif num_of_tokens == 2:
+        elif num_of_pieces == 2:
             print("❷   ", end="")
-        elif num_of_tokens == 3:
+        elif num_of_pieces == 3:
             print("❸   ", end="")
         else:
             print("❹   ", end="")
@@ -71,17 +63,17 @@ class board:
             self.print_tile(16 + i)
         self.print_tile(1)
 
-    def show_tokens_state(self, player1: player, player2: player):
-        player1_token_list = player1.get_tokenlist()
-        player2_token_list = player2.get_tokenlist()
+    def show_pieces_state(self, player1: player, player2: player):
+        player1_piece_list = player1.get_piecelist()
+        player2_piece_list = player2.get_piecelist()
         gotoxy(27, 0)
         print(player1.get_team() + " 팀")
-        for i in range(len(player1_token_list)):  # 각 플레이어의 말 상태 출력
+        for i in range(len(player1_piece_list)):  # 각 플레이어의 말 상태 출력
             gotoxy(27, i + 1)
-            print("%d 번 말 : %d" % (i, player1_token_list[i].get_index()))
+            print("%d 번 말 : %d" % (i, player1_piece_list[i].get_index()))
         gotoxy(38, 0)
         print("| " + player2.get_team() + " 팀")
-        for i in range(len(player2_token_list)):
+        for i in range(len(player2_piece_list)):
             gotoxy(38, i + 1)
-            print("| %d 번 말 : %d" % (i, player2_token_list[i].get_index()))
+            print("| %d 번 말 : %d" % (i, player2_piece_list[i].get_index()))
         gotoxy(0, 15)

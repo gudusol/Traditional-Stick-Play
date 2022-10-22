@@ -1,3 +1,4 @@
+import re
 from yut import yut
 from board import board
 from player import player
@@ -52,6 +53,38 @@ class game:
             break
         return 0
 
+    def move_input(self, player):       # 움직일 말과 사용할 결과를 입력받아서 말을 움직이는 함수
+        while (player.results):         # player의 결과 리스트가 비었다면 반복 종료
+            s = input("이동할 말과 적용할 값을 입력하세요: ")
+            s = s.replace(" ","")
+
+            # 입력받은 명령어 문법 부합 여부 확인
+            try:
+                piece_num = int(s[0])                   # 첫번째 글자가 움직일 말의 번호
+
+                if player.pieces[piece_num].idx > 30:   # 골인한 말일 시 문법 위배
+                    print("이미 골인한 말입니다. 다른 말을 선택해주세요.")
+                    continue
+
+                if len(s) == 1:                         # 사용자가 움직일 말만 입력했을 시
+                    if len(player.results) == 1:        # 결과 리스트에 하나뿐이라면 문법 부합
+                        result = player.results.pop()   # 결과 리스트에 있던 결과를 움직일 결과로 pop
+                    else:                               # 아니면 문법 위배
+                        print("적용할 결과를 입력해주세요.")
+                        continue
+                elif len(s) > 2:                        # 사용자 명령어가 공백 미포함 2글자 초과 시 위배
+                    print("잘못된 명령어입니다.")
+                    continue
+                else:
+                    result = player.results.pop(player.results.index(s[1])) # 두번째 글자는 움직일 결과
+                
+            except:
+                print("잘못된 명령어입니다.")
+                continue
+
+            player.move_piece(player.piece[piece_num], result)   # 말 이동
+
+                
 
 
 
