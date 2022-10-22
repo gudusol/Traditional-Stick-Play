@@ -3,7 +3,6 @@ from board import board
 from player import player
 
 from time import sleep
-import keyboard
 from gotoxy import gotoxy
 import os
 
