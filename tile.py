@@ -12,8 +12,8 @@ class tile:
     def get_pieces(self):
         return self.pieces
 
-    def reach_token(self, token):
-        self.pieces.append(token)
+    def reach_piece(self, piece):
+        self.pieces.append(piece)
 
     # 1번 6번 11번 16번 25번
     def get_dest_index(self, yut_result):
