@@ -1,10 +1,13 @@
 from piece import piece
 
+
 class tile:
     index = 0
     pieces = []
 
     def __init__(self, index):
+        self.pieces = [piece("a")]  # 칸의 배열
+        self.pieces.pop()
         self.index = index
         self.pieces = [piece(" ")]
         self.pieces.clear()
@@ -18,6 +21,7 @@ class tile:
 
     def get_num_pieces(self):
         return len(self.pieces)
+
     def reach_piece(self, piece):
         self.pieces.append(piece)
 
@@ -75,5 +79,4 @@ class tile:
         else:
             dest_index = self.index + yut_result
 
-        self.pieces.clear()
         return dest_index

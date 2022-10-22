@@ -18,8 +18,6 @@ class piece:
         #    return self.idx
         # else:
         #    return self.idx  # idx 음수값
-        if self.idx > 29:
-            return -1
         return self.idx
 
     def get_team(self):
