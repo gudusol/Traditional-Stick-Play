@@ -1,4 +1,3 @@
-from turtle import goto
 from tile import tile
 from player import player
 from piece import piece
@@ -8,6 +7,7 @@ import os
 GOALIN = 0
 MOVE = 1
 CATCH = 2
+CARRY = 3
 
 
 class board:
@@ -19,43 +19,50 @@ class board:
 
     def move_piece(self, piece, yut_result) -> int:
         ret = MOVE
-        if piece.get_index() >= 30:
-            return GOALIN
-        elif piece.get_index() == 0:
-            result = yut_result
-            if len(self.tile_list[result].get_pieces()) > 0:
+        if piece.get_index() == 0:
+            dest = yut_result
+            dest_tile = self.tile_list[dest - 1]
+            dest_pieces = dest_tile.get_pieces()
+            if len(dest_pieces) > 0:
                 if (
-                    self.tile_list[result].get_pieces()[0].get_team()
-                    != piece.get_team()
+                    dest_pieces[0].get_team() != piece.get_team()
                 ):  # result칸에 있는 타일의 말 리스트를 가져와 리스트에 적팀 말이 있는지 조사
-                    for i in self.tile_list[result].get_pieces():
+                    for i in dest_pieces:
                         i.set_index(0)  # 있으면 적팀 말 집으로 다 보내버리고 해당 칸의 말 리스트 clear()
-                        self.tile_list[result].set_pieces([])
+                    dest_tile.set_pieces([])
                     ret = CATCH  # i값을 catch로 설정
-            self.tile_list[result].reach_piece(piece)  # 해당 칸의 말 리스트에 piece append 해줌
-            piece.set_index(result)  # piece index 결과에 맞게 바꿔줌
+                else:  # 엎히기
+                    ret = CARRY
+            dest_tile.reach_pieces(piece)
+            piece.set_index(dest)
         else:
-            result = self.tile_list[piece.get_index()].get_dest_index(
+            dest = self.tile_list[piece.get_index() - 1].get_dest_index(
                 yut_result
             )  # result변수에 윷 결과에 맞는 도착할 칸의 인덱스 저장
-            if len(self.tile_list[result].get_pieces()) > 0:
+            dest_tile = self.tile_list[dest - 1]
+            dest_pieces = dest_tile.get_pieces()
+            start_tile = self.tile_list[piece.get_index() - 1]
+
+            if dest >= 30:
+                return GOALIN
+            if len(dest_pieces) > 0:
                 if (
-                    self.tile_list[result].get_pieces()[0].get_team()
-                    != piece.get_team()
-                ):  # result칸에 있는 타일의 말 리스트를 가져와 리스트에 적팀 말이 있는지 조사
-                    for i in self.tile_list[result].get_pieces():
+                    dest_pieces[0].get_team() != piece.get_team()
+                ):  # dest칸에 있는 타일의 말 리스트를 가져와 리스트에 적팀 말이 있는지 조사
+                    for i in dest_pieces:
                         i.set_index(0)  # 있으면 적팀 말 집으로 다 보내버리고 해당 칸의 말 리스트 clear()
+                    dest_tile.set_pieces([])
                     ret = CATCH  # i값을 catch로 설정
-            self.tile_list[result].set_pieces(
-                self.tile_list[piece.get_index()].get_pieces()
-            )
-            self.tile_list[piece.get_index()].set_pieces([])
-            self.tile_list[result].set_pieces(
-                self.tile_list[piece.get_index()].get_pieces()
-            )
-            self.tile_list[piece.get_index()].set_pieces([])
-            for i in self.tile_list[result].get_pieces():
-                i.set_index(result)
+                else:  # 엎히기
+                    # dest_tile.set_pieces(dest_pieces + start_tile.get_pieces())
+                    # start_tile.set_pieces([])
+                    # for i in dest_pieces:
+                    #     i.set_index(dest)
+                    ret = CARRY
+            dest_tile.set_pieces(dest_pieces + start_tile.get_pieces())
+            start_tile.set_pieces([])
+            for i in dest_pieces:
+                i.set_index(dest)
 
         return ret
 
@@ -122,6 +129,7 @@ class board:
         for i in range(len(player2_piece_list)):
             gotoxy(39, i + 1)
             print(" | %d 번 말 : %d" % (i + 1, player2_piece_list[i].get_index()))
+        gotoxy(0, 15)
 
         gotoxy(28, 5)
         if turn == 1:
