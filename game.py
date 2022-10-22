@@ -22,8 +22,8 @@ class game:
         self.b = board()
 
     def game_start(self):  # 게임을 구동하는 함수
-
         os.system("cls")  # player1 생성
+
         gotoxy(x, y + 2)
         print("Player 1의 이름을 입력해주세요 :")
         gotoxy(x + 5, y + 3)
@@ -37,14 +37,12 @@ class game:
         p2_name = input()
         p2 = player(p2_name)
 
-        b = board()
-
         os.system("cls")
 
         while self.turn == 1:  # player1 턴
 
-            b.show_board()
-            b.show_pieces_state(p1, p2, self.turn)
+            self.b.show_board()
+            self.b.show_pieces_state(p1, p2, self.turn)
 
             gotoxy(27, 12)
             print("던지기 :")
@@ -84,6 +82,9 @@ class game:
                 continue  # 윷 던지기 끝
 
             # 움직일 말 번호 및 어떤 결과로 이동할 지 입력
+            self.move_input(p1)
+            self.b.show_board()
+            self.b.show_pieces_state(p1, p2)
 
             # 해당 말이 골인하지 않았고 저장되어있는 결과인가?
 
