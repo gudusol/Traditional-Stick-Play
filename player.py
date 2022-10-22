@@ -4,11 +4,12 @@ from piece import piece
 
 class player:
     team = ""
-    tokens = []
+    pieces = []
+    results = []
 
     def __init__(self, team):
         self.team = team
-        self.tokens = [
+        self.pieces = [
             piece(self.team),
             piece(self.team),
             piece(self.team),
@@ -18,7 +19,7 @@ class player:
     # 나중에 윷리스트는 게임으로 옮기고 yut_list를 throw 함수의 인자로 받음
 
     def throw(self, yut_list):
-        li = [i.throw() for i in self.yut_list]
+        li = [i.throw() for i in yut_list]
 
         if li.count("등") == 4:
             return "모"
