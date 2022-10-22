@@ -53,14 +53,14 @@ class board:
                         i.set_index(0)  # 있으면 적팀 말 집으로 다 보내버리고 해당 칸의 말 리스트 clear()
                     dest_tile.set_pieces([])
                     ret = CATCH  # i값을 catch로 설정
-                else:  # 엎히기
+                else:  # 업히기
                     # dest_tile.set_pieces(dest_pieces + start_tile.get_pieces())
                     # start_tile.set_pieces([])
                     # for i in dest_pieces:
                     #     i.set_index(dest)
                     ret = CARRY
             dest_tile.set_pieces(dest_pieces + start_tile.get_pieces())
-            start_tile.set_piece([])
+            start_tile.set_pieces([])
             for i in dest_pieces:
                 i.set_index(dest)
 

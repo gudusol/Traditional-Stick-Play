@@ -35,9 +35,9 @@ class game:
         os.system("cls")
 
         while self.winner is None:  # winner가 정해졌다면 반복 종료
-
             b.show_board()
             b.show_pieces_state(player_list[0], player_list[1], self.turn)
+
 
             gotoxy(27, 12)
             print("던지기 :")
@@ -95,8 +95,13 @@ class game:
                     gotoxy(35, 12)
                     sleep(0.5)
             else:
-                print("올바른 명령어를 입력해주세요")
+                print("\t\t\t올바른 명령어를 입력해주세요")
+                sleep(1)
                 continue  # 윷 던지기 끝
+            os.system("cls")
+            b.show_board()
+            b.show_pieces_state(player_list[0], player_list[1], self.turn)
+
 
             # 움직일 말 번호 및 어떤 결과로 이동할 지 입력
 
@@ -207,28 +212,28 @@ class game:
         print("\t\tQUIT\n")
         print("\t\tHELP")
         gotoxy(cursor_x, cursor_y)
-        print("◀", end="")
+        print("◀")
+        gotoxy(cursor_x, cursor_y)
         while True:
 
             input_key = keyboard.read_key()
             sleep(0.2)
 
             if input_key == "down" and cursor_y < 9:  # 아래쪽 방향키 입력
-                cursor_x -= 1
-                gotoxy(cursor_x, cursor_y)
-                print("  ", end="")
-                cursor_x += 1
+                print("  ")
                 cursor_y += 2
                 gotoxy(cursor_x, cursor_y)
-                print("◀", end="")
-            elif input_key == "up" and cursor_y > 6:  # 위쪽 방향키 입력
-                cursor_x -= 1
+                print("◀")
                 gotoxy(cursor_x, cursor_y)
-                print("  ", end="")
-                cursor_x += 1
+
+            elif input_key == "up" and cursor_y > 6:  # 위쪽 방향키 입력
+                print("  ")
                 cursor_y -= 2
                 gotoxy(cursor_x, cursor_y)
-                print("◀", end="")
+                print("◀")
+                gotoxy(cursor_x, cursor_y)
+
+            
 
             elif input_key == "enter" and cursor_y == 6:  # START
                 os.system("cls")
