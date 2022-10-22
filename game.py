@@ -4,6 +4,7 @@ from board import board
 from player import player
 from time import sleep
 from gotoxy import gotoxy
+import keyboard
 import os
 
 x = 10  # gotoxy x좌표
@@ -29,19 +30,28 @@ class game:
         p1_name = input()
         p1 = player(p1_name)
 
-        # os.system("cls") # player2 생성
-        # gotoxy(x, y + 2)
-        # print("Player 2의 이름을 입력해주세요 :")
-        # gotoxy(x + 5, y + 3)
-        # p2_name = input()
-        # p2 = player(p2_name)
+        os.system("cls") # player2 생성
+        gotoxy(x, y + 2)
+        print("Player 2의 이름을 입력해주세요 :")
+        gotoxy(x + 5, y + 3)
+        p2_name = input()
+        p2 = player(p2_name)
+
+        b = board()
 
         os.system("cls")
+        
         while self.turn == 1:  # player1 턴
-            print("던지세요 :", end=" ")
+
+            b.show_board()
+            b.show_pieces_state(p1, p2)
+
+            gotoxy(27, 12)
+            print("던지기 :")
+            gotoxy(35, 12)
             s = input()  # 윷 던지는 변수 아래는 예외 처리
             if (
-                s == "던지기"
+                s == "던진다"
                 or s == "던지"
                 or s == "던"
                 or s == "ㄷㅈㄱ"
@@ -54,19 +64,27 @@ class game:
                 or s == "t"
             ):
                 p1.results.append(p1.throw(self.yut_list))
-                print(p1.results)
+                
                 if (
                     p1.results[len(p1.results) - 1] == "윷"
                     or p1.results[len(p1.results) - 1] == "모"
                 ):
-                    print("윷 모! 한 번더~")
+                    gotoxy(27, 11)
+                    print("%s! 한 번더~"%(p1.results[len(p1.results) - 1]))
+                    gotoxy(35, 12)
+                    sleep(1)
                     continue
+                else:
+                    gotoxy(27, 11)
+                    print("%s!" %(p1.results[len(p1.results) - 1]))
+                    gotoxy(35, 12)
+                    sleep(1)
             else:
                 print("올바른 명령어를 입력해주세요")
                 continue  # 윷 던지기 끝
-
+            
             # 움직일 말 번호 및 어떤 결과로 이동할 지 입력
-            self.move_input(p1)
+
 
             # 해당 말이 골인하지 않았고 저장되어있는 결과인가?
 
@@ -81,7 +99,6 @@ class game:
             # 사용할 결과가 남았는가?
 
             # 상대턴으로 넘어감
-            break
         return 0
 
     def move_input(self, player):  # 움직일 말과 사용할 결과를 입력받아서 말을 움직이는 함수
