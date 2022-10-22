@@ -2,7 +2,7 @@ import re
 from yut import yut
 from board import board
 from player import player
-
+import keyboard
 from time import sleep
 from gotoxy import gotoxy
 import os
