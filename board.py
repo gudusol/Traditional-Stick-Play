@@ -18,11 +18,10 @@ class board:
             self.tile_list.append(tile(i + 1))
 
     def move_piece(self, piece, yut_result) -> int:
-        i = -1
+        ret = MOVE
         if piece.get_index() >= 30:
             return GOALIN
         elif piece.get_index() == 0:
-            i = MOVE
             result = self.home.get_dest_index(yut_result)
             if len(self.tile_list[result].get_pieces()) > 0:
                 if (
@@ -31,11 +30,10 @@ class board:
                 ):  # result칸에 있는 타일의 말 리스트를 가져와 리스트에 적팀 말이 있는지 조사
                     for i in self.tile_list[result].get_pieces():
                         i.set_index(0)  # 있으면 적팀 말 집으로 다 보내버리고 해당 칸의 말 리스트 clear()
-                    i = CATCH  # i값을 catch로 설정
+                    ret = CATCH  # i값을 catch로 설정
             self.tile_list[result].set_pieces([piece])
             piece.set_index(result)
         else:
-            i = MOVE
             result = self.tile_list[piece.get_index()].get_dest_index(
                 yut_result
             )  # result변수에 윷 결과에 맞는 도착할 칸의 인덱스 저장
@@ -46,15 +44,15 @@ class board:
                 ):  # result칸에 있는 타일의 말 리스트를 가져와 리스트에 적팀 말이 있는지 조사
                     for i in self.tile_list[result].get_pieces():
                         i.set_index(0)  # 있으면 적팀 말 집으로 다 보내버리고 해당 칸의 말 리스트 clear()
-                    i = CATCH  # i값을 catch로 설정
+                    ret = CATCH  # i값을 catch로 설정
             self.tile_list[result].set_pieces(
                 self.tile_list[piece.get_index()].get_pieces()
             )
-            self.tile_list[piece.get_index()].set_piece([])
+            self.tile_list[piece.get_index()].set_pieces([])
             for i in self.tile_list[result].get_pieces():
                 i.set_index(result)
 
-        return i
+        return ret
 
     def print_tile(self, idx):
         num_of_pieces = len(self.tile_list[idx - 1].get_pieces())
