@@ -30,8 +30,9 @@ class board:
                 ):  # result칸에 있는 타일의 말 리스트를 가져와 리스트에 적팀 말이 있는지 조사
                     for i in self.tile_list[result].get_pieces():
                         i.set_index(0)  # 있으면 적팀 말 집으로 다 보내버리고 해당 칸의 말 리스트 clear()
+                        self.tile_list[result].set_pieces([])
                     ret = CATCH  # i값을 catch로 설정
-            self.tile_list[result].set_pieces([piece])
+            self.tile_list[result].reach_piece(piece)
             piece.set_index(result)
         else:
             result = self.tile_list[piece.get_index()].get_dest_index(
@@ -49,6 +50,9 @@ class board:
                 self.tile_list[piece.get_index()].get_pieces()
             )
             self.tile_list[piece.get_index()].set_pieces([])
+            self.tile_list[result].set_pieces(
+                self.tile_list[piece.get_index()].get_pieces()
+            )
             for i in self.tile_list[result].get_pieces():
                 i.set_index(result)
 
@@ -68,6 +72,7 @@ class board:
             print("❹   ", end="")
 
     def show_board(self):
+        gotoxy(0, 0)
         os.system("cls")
         for i in range(6):
             self.print_tile(11 - i)
