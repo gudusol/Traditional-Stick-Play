@@ -1,15 +1,19 @@
 class tile:
     index = 0
-    tokens = []
+    pieces = []
 
     def __init__(self, index):
         self.index = index
 
-    def get_tokens(self):
-        return self.tokens
+    def set_pieces(self, pieces):
+        self.pieces = pieces
+        return
+
+    def get_pieces(self):
+        return self.pieces
 
     def reach_token(self, token):
-        self.tokens.append(token)
+        self.pieces.append(token)
 
     # 1번 6번 11번 16번 25번
     def get_dest_index(self, yut_result):
@@ -67,5 +71,5 @@ class tile:
         else:
             dest_index = self.index + yut_result
 
-        self.tokens.clear()
+        self.pieces.clear()
         return dest_index
