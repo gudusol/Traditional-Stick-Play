@@ -26,7 +26,7 @@ class game:
         os.system("cls")  # player1 생성
         gotoxy(x, y + 2)
         print("Player 1의 이름을 입력해주세요 :")
-        gotoxy(x + 33, y + 2)
+        gotoxy(x + 5, y + 3)
         p1_name = input()
         p1 = player(p1_name)
 
@@ -51,7 +51,7 @@ class game:
             gotoxy(35, 12)
             s = input()  # 윷 던지는 변수 아래는 예외 처리
             if (
-                s == "던진다"
+                s == "던지기"
                 or s == "던지"
                 or s == "던"
                 or s == "ㄷㅈㄱ"

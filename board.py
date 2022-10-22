@@ -30,8 +30,9 @@ class board:
                 ):  # result칸에 있는 타일의 말 리스트를 가져와 리스트에 적팀 말이 있는지 조사
                     for i in self.tile_list[result].get_pieces():
                         i.set_index(0)  # 있으면 적팀 말 집으로 다 보내버리고 해당 칸의 말 리스트 clear()
+                        self.tile_list[result].set_pieces([])
                     ret = CATCH  # i값을 catch로 설정
-            self.tile_list[result].set_pieces([piece])
+            self.tile_list[result].reach_piece(piece)
             piece.set_index(result)
         else:
             result = self.tile_list[piece.get_index()].get_dest_index(
@@ -49,6 +50,9 @@ class board:
                 self.tile_list[piece.get_index()].get_pieces()
             )
             self.tile_list[piece.get_index()].set_pieces([])
+            self.tile_list[result].set_pieces(
+                self.tile_list[piece.get_index()].get_pieces()
+            )
             for i in self.tile_list[result].get_pieces():
                 i.set_index(result)
 
@@ -68,6 +72,7 @@ class board:
             print("❹   ", end="")
 
     def show_board(self):
+        gotoxy(0, 0)
         os.system("cls")
         for i in range(6):
             self.print_tile(11 - i)
@@ -104,6 +109,7 @@ class board:
         for i in range(5):
             self.print_tile(16 + i)
         self.print_tile(1)
+        print("\n")
 
     def show_pieces_state(self, player1: player, player2: player):
         player1_piece_list = player1.get_piecelist()
@@ -118,6 +124,9 @@ class board:
         for i in range(len(player2_piece_list)):
             gotoxy(39, i + 1)
             print(" | %d 번 말 : %d" % (i + 1, player2_piece_list[i].get_index()))
+        
+        gotoxy(28, 5)
+        print(player1.results) # player1이랑 player2 results 공유되는듯 ㅇㅅㅇ
 
     def show_yut_result(self, player: player):
         gotoxy(28, 7)
