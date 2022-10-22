@@ -11,7 +11,6 @@ CATCH = 2
 
 class board:
     tile_list = []  # 칸의 배열
-    home = tile(0)
 
     def __init__(self):
         for i in range(29):
@@ -22,7 +21,7 @@ class board:
         if piece.get_index() >= 30:
             return GOALIN
         elif piece.get_index() == 0:
-            result = self.home.get_dest_index(yut_result)
+            result = yut_result
             if len(self.tile_list[result].get_pieces()) > 0:
                 if (
                     self.tile_list[result].get_pieces()[0].get_team()
@@ -32,8 +31,8 @@ class board:
                         i.set_index(0)  # 있으면 적팀 말 집으로 다 보내버리고 해당 칸의 말 리스트 clear()
                         self.tile_list[result].set_pieces([])
                     ret = CATCH  # i값을 catch로 설정
-            self.tile_list[result].reach_piece(piece)
-            piece.set_index(result)
+            self.tile_list[result].reach_piece(piece)  # 해당 칸의 말 리스트에 piece append 해줌
+            piece.set_index(result)  # piece index 결과에 맞게 바꿔줌
         else:
             result = self.tile_list[piece.get_index()].get_dest_index(
                 yut_result
@@ -53,6 +52,7 @@ class board:
             self.tile_list[result].set_pieces(
                 self.tile_list[piece.get_index()].get_pieces()
             )
+            self.tile_list[piece.get_index()].set_pieces([])
             for i in self.tile_list[result].get_pieces():
                 i.set_index(result)
 
@@ -75,41 +75,38 @@ class board:
         gotoxy(0, 0)
         os.system("cls")
         for i in range(6):
-            self.print_tile(11 - i)
+            self.print_tile(10 - i)
         print("\n")
-        self.print_tile(12)
+        self.print_tile(11)
         self.print_tile(23)
         print("          ", end="")
         self.print_tile(21)
-        self.print_tile(5)
+        self.print_tile(4)
         print("\n")
-        self.print_tile(13)
+        self.print_tile(12)
         print("     ", end="")
         self.print_tile(24)
         self.print_tile(22)
         print("     ", end="")
-        self.print_tile(4)
-        print("\n")
+        self.print_tile(3)
         print("             ", end="")
         self.print_tile(25)
-        print("\n")
-        self.print_tile(14)
+        self.print_tile(13)
         print("     ", end="")
         self.print_tile(28)
         self.print_tile(26)
         print("     ", end="")
-        self.print_tile(3)
+        self.print_tile(2)
         print("\n")
-        self.print_tile(15)
+        self.print_tile(14)
         self.print_tile(29)
         print("          ", end="")
         self.print_tile(27)
-        self.print_tile(2)
-        print("\n")
-        for i in range(5):
-            self.print_tile(16 + i)
         self.print_tile(1)
         print("\n")
+        for i in range(5):
+            self.print_tile(15 + i)
+        self.print_tile(20)
 
     def show_pieces_state(self, player1: player, player2: player):
         player1_piece_list = player1.get_piecelist()
@@ -124,9 +121,9 @@ class board:
         for i in range(len(player2_piece_list)):
             gotoxy(39, i + 1)
             print(" | %d 번 말 : %d" % (i + 1, player2_piece_list[i].get_index()))
-        
+
         gotoxy(28, 5)
-        print(player1.results) # player1이랑 player2 results 공유되는듯 ㅇㅅㅇ
+        print(player1.results)  # player1이랑 player2 results 공유되는듯 ㅇㅅㅇ
 
     def show_yut_result(self, player: player):
         gotoxy(28, 7)
