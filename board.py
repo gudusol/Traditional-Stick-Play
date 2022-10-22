@@ -104,6 +104,7 @@ class board:
         for i in range(5):
             self.print_tile(16 + i)
         self.print_tile(1)
+        print("\n")
 
     def show_pieces_state(self, player1: player, player2: player):
         player1_piece_list = player1.get_piecelist()
@@ -118,6 +119,9 @@ class board:
         for i in range(len(player2_piece_list)):
             gotoxy(39, i + 1)
             print(" | %d 번 말 : %d" % (i + 1, player2_piece_list[i].get_index()))
+        
+        gotoxy(28, 5)
+        print(player1.results) # player1이랑 player2 results 공유되는듯 ㅇㅅㅇ
 
     def show_yut_result(self, player: player):
         gotoxy(28, 7)
