@@ -101,6 +101,21 @@ class game:
             # 상대턴으로 넘어감
         return 0
 
+    def print_help(self):       # 도움말 출력 함수
+        os.system("cls")
+        print("전통 막대기 놀이 : TRADITIONAL STICK PLAY")
+        print("우리 나라의 민속놀이인 윷놀이 게임 프로그램입니다.\n")
+        print("### 게임 규칙 ###")
+        print("두 명의 플레이어가 번갈아가며 윷을 던져 나온 결과로 4개의 말을 움직입니다. \n윷을 던진 결과로 윷이나 모가 나오면 한 번 더 던질 수 있습니다.")
+        print("4개의 말을 먼저 모두 골인시키는 플레이어가 승리합니다.\n상대방의 말을 잡거나 본인의 말에 업힐 수 있습니다.\n")
+        print("### 조작 방법 ###")
+        print("키보드를 통한 명령어 입력 후 Enter 키를 누르면 동작합니다.")
+        print("입력한 명령어가 각 프롬프트의 명령어 문법에 위배되는 경우 프로그램이 정상적으로 동작하지 않을 수 있습니다.\n")
+        print("esc키를 누르면 이전 화면으로 이동합니다.")
+        keyboard.wait("esc")
+        return
+
+
     def move_input(self, player):  # 움직일 말과 사용할 결과를 입력받아서 말을 움직이는 함수
         while player.results:  # player의 결과 리스트가 비었다면 반복 종료
             s = input("이동할 말과 적용할 값을 입력하세요(예시: 3 걸): ")
