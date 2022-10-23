@@ -1,7 +1,7 @@
 import ctypes
 
 
-def gotoxy(x, y):
+def gotoxy(x, y):  # x, y 값을 받아서 커서를 해당 위치로 이동
     return ctypes.windll.kernel32.SetConsoleCursorPosition(
         ctypes.windll.kernel32.GetStdHandle(-11),
         (((y & 0xFFFF) << 0x10) | (x & 0xFFFF)),
@@ -18,7 +18,7 @@ class CUSTOM_CONSOLE_SCREEN_BUFFER_INFO(ctypes.Structure):
     ]
 
 
-def GetConsoleCursorPos():
+def GetConsoleCursorPos():  # 현재 커서의 위치를 반환
     ccsbi = CUSTOM_CONSOLE_SCREEN_BUFFER_INFO()
     ccsbi.dwSize = 0x16
     ctypes.windll.kernel32.GetConsoleScreenBufferInfo(

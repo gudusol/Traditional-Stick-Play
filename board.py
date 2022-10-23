@@ -5,6 +5,7 @@ from gotoxy import gotoxy
 from time import sleep
 import os
 
+# 말이 움직인 결과에 따라 값을 반환하기 위한 상수
 GOALIN = 0
 MOVE = 1
 CATCH = 2
@@ -12,48 +13,51 @@ CATCH = 2
 
 class board:
     tile_list = []  # 칸의 배열
-    color_list = ["\033[31m", "\033[34m"]  # color 배열 순서대로 0 : red , 1 : blue
-    team_list = []
+    team_list = []  # 팀을 저장하는 배열
 
-    def __init__(self):
-        self.tile_list = [tile(-1)]  # 칸의 배열
+    def __init__(self):  # 보드 생성
+        self.tile_list = [tile(-1)]
         self.tile_list.pop()
         for i in range(29):
-            self.tile_list.append(tile(i + 1))
+            self.tile_list.append(tile(i + 1))  # 칸의 배열 초기화
 
-    def move_piece(self, piece: piece, yut_result):
-        dest = 0
+    def move_piece(self, piece: piece, yut_result):  # 말을 움직이는 함수
+        dest = 0  # 도착지의 인덱스
         if piece.get_index() == 0:  # 집에서 출발
             dest = yut_result
             dest_tile = self.tile_list[dest - 1]
-            if len(dest_tile.get_pieces()) == 0:
+            if len(dest_tile.get_pieces()) == 0:  # 도착지에 말이 없을 때
                 piece.set_index(dest)
                 dest_tile.set_pieces([piece])
                 return MOVE
-            else:
-                if dest_tile.get_pieces()[0].get_team() != piece.get_team():  # 잡을 때
+            else:  # 도착지에 말이 있을 때
+                if (
+                    dest_tile.get_pieces()[0].get_team() != piece.get_team()
+                ):  # 도착지에 상대팀 말이 있을 때(잡기)
                     for i in dest_tile.get_pieces():
                         i.set_index(0)
                     dest_tile.set_pieces([])
                     piece.set_index(dest)
                     dest_tile.reach_piece(piece)
                     return CATCH
-                else:
+                else:  # 도착지에 같은 팀 말이 있을 때(업기)
                     piece.set_index(dest)
                     dest_tile.reach_piece(piece)
                     return MOVE
 
-        else:  # 집 아닐때
+        else:  # 집 이외의 칸에서 출발
             dest = self.tile_list[piece.get_index() - 1].get_dest_index(yut_result)
-            if dest >= 30:
+            if dest >= 30:  # 도착지가 골인일 때
                 start_tile_idx = self.tile_list[piece.get_index() - 1].index
                 for i in self.tile_list[piece.get_index() - 1].get_pieces():
                     i.set_index(30)
                 self.tile_list[start_tile_idx - 1].set_pieces([])
                 return GOALIN
-            dest_tile = self.tile_list[dest - 1]
-            if len(dest_tile.get_pieces()) != 0:
-                if dest_tile.get_pieces()[0].get_team() != piece.get_team():
+            dest_tile = self.tile_list[dest - 1]  # 도착지의 타일
+            if len(dest_tile.get_pieces()) != 0:  # 도착지에 말이 있을 때
+                if (
+                    dest_tile.get_pieces()[0].get_team() != piece.get_team()
+                ):  # 도착지에 상대팀 말이 있을 때(잡기)
                     for i in dest_tile.get_pieces():
                         i.set_index(0)
                     dest_tile.set_pieces([])
@@ -64,7 +68,7 @@ class board:
                     for i in dest_tile.get_pieces():
                         i.set_index(dest)
                     return CATCH
-                else:  # 업을때
+                else:  # 도착지에 같은 팀 말이 있을 때(업기)
                     dest_tile.set_pieces(
                         dest_tile.get_pieces()
                         + self.tile_list[piece.get_index() - 1].get_pieces()
@@ -73,18 +77,18 @@ class board:
                     for i in dest_tile.get_pieces():
                         i.set_index(dest)
                     return MOVE
-            else:
+            else:  # 잡거나 업지 않고 이동 할 때
                 dest_tile.set_pieces(self.tile_list[piece.get_index() - 1].get_pieces())
                 self.tile_list[piece.get_index() - 1].set_pieces([])
                 for i in dest_tile.get_pieces():
                     i.set_index(dest)
                 return MOVE
 
-    def print_tile(self, idx, p1: player, p2: player):
+    def print_tile(self, idx, p1: player, p2: player):  # 칸을 출력하는 함수
         num_of_pieces = self.tile_list[idx - 1].get_num_pieces()  # 타일 안에 있는 pieces의 갯수
-        if num_of_pieces == 0:
+        if num_of_pieces == 0:  # 말이 없을 때
             print("■  ", end="")
-        else:
+        else:  # 말이 있을 때, 말의 갯수에 따라 다른 숫자를 출력, 말의 팀에 따라 다른 색깔을 출력
             if self.tile_list[idx - 1].pieces[0].get_team() == p1.get_team():
                 if num_of_pieces == 1:
                     print("\033[31m" + "❶  " + "\033[0m", end="")  # reset
@@ -104,7 +108,7 @@ class board:
                 else:
                     print("\033[34m" + "❹  " + "\033[0m", end="")
 
-    def show_board(self, p1: player, p2: player):
+    def show_board(self, p1: player, p2: player):  # 보드를 출력하는 함수
         os.system("cls")
         gotoxy(20, 10)
         for i in range(6):
@@ -149,12 +153,16 @@ class board:
             self.print_tile(15 + i, p1, p2)
         print()
 
-    def show_pieces_state(self, p1: player, p2: player, turn):
-        p1_piece_list = p1.get_piecelist()
-        p2_piece_list = p2.get_piecelist()
+    def show_pieces_state(
+        self, p1: player, p2: player, turn
+    ):  # 현황판 출력하는 함수 (말의 상태, 팀, 턴)
+        p1_piece_list = p1.get_piecelist()  # 플레이어 1의 말 리스트
+        p2_piece_list = p2.get_piecelist()  # 플레이어 2의 말 리스트
         gotoxy(55, 10)
         print("\033[31m" + p1.get_team() + " 팀")
-        for i in range(len(p1_piece_list)):  # 각 플레이어의 말 상태 출력
+
+        # 각 플레이어의 말 상태 출력
+        for i in range(len(p1_piece_list)):
             gotoxy(55, i + 11)
             print_idx = (
                 "골인"
@@ -175,6 +183,8 @@ class board:
             print(f"{i + 1} 번 말 : {print_idx}")
         print("\033[0m")
         gotoxy(55, 16)
+
+        # 현재 턴인 플레이어의 윷 결과 출력
         if turn == 0:
             print("\033[31m" + "[%s의 던진 윷 현황]" % p1.get_team())
             gotoxy(55, 17)

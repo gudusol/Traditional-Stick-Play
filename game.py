@@ -11,7 +11,7 @@ x = 10  # gotoxy x좌표
 y = 1  # gotoxy y좌표
 
 
-def flush_input():
+def flush_input():  # 입력 버퍼 비우기
     try:
         import msvcrt
 
@@ -23,14 +23,14 @@ def flush_input():
         termios.tcflush(sys.stdin, termios.TCIOFLUSH)
 
 
-class game:
+class game:  # 게임 클래스
     winner = None  # 승리자 string형 변수 처음에는 null
     turn = 0  # 현재 턴 int형 변수, 1p부터 시작함, 2p turn은 2
-    yut_list = []
-    b = None
-    player_list = []
+    yut_list = []  # yut 객체를 담을 리스트
+    b = None  # board 객체
+    player_list = []  # player 객체를 담을 리스트
 
-    def __init__(self):
+    def __init__(self):  # 게임 객체 생성자
         self.winner = None
         self.turn = 0
         self.yut_list = [yut(), yut(), yut(), yut()]
@@ -38,10 +38,10 @@ class game:
         self.player_list = []
 
     def game_start(self):  # 게임을 구동하는 함수
-        self.game_title()
+        self.game_title()  # 게임 타이틀 메뉴 출력
         flush_input()
         player_idx = 0
-        while player_idx < 2:
+        while player_idx < 2:  # 플레이어 객체 생성(2명)
             os.system("cls")  # player1 생성
             player_name = input(f"Player {player_idx+1}의 이름을 입력해주세요 :")
             if player_name == "" or len(player_name) > 10:
@@ -58,14 +58,14 @@ class game:
 
         os.system("cls")
 
-        while self.winner is None:  # winner가 정해졌다면 반복 종료
+        while self.winner is None:  # winner가 정해졌다면 게임 종료후 게임 타이틀 메뉴로 돌아감
             self.b.show_board(self.player_list[0], self.player_list[1])
             self.b.show_pieces_state(
                 self.player_list[0], self.player_list[1], self.turn
             )
 
             gotoxy(55, 20)
-            print("던지기: ")
+            print("던지기: ")  # 던지기 입력 대기
             gotoxy(63, 20)
             s = input()  # 윷 던지는 변수 아래는 예외 처리
             if (
@@ -94,7 +94,7 @@ class game:
                         len(self.player_list[self.turn].results) - 1
                     ]
                     == "모"
-                ):
+                ):  # 윷이나 모가 나왔을 때 값을 저장하고 한 번 더 던짐
                     gotoxy(55, 19)
                     print(
                         "%s! 한 번더~"
@@ -106,7 +106,7 @@ class game:
                     )
                     sleep(0.5)
                     continue
-                else:
+                else:  # 도, 개, 걸일 때는 값을 저장하고 아래 쪽 move_input 함수로 넘어감
                     gotoxy(55, 19)
                     print(
                         "%s!"
@@ -118,8 +118,10 @@ class game:
                     )
                     gotoxy(35, 12)
                     sleep(0.5)
-            elif s == "/ff" or s == "/gg" or s == "종료" or s == "항복" or s == "ㅈㅈ":
 
+            elif (
+                s == "/ff" or s == "/gg" or s == "종료" or s == "항복" or s == "ㅈㅈ"
+            ):  # 항복(종료)
                 while True:
                     os.system("cls")
 
@@ -145,11 +147,10 @@ class game:
                 or s == "도움"
                 or s == "ㄷㅇㅁ"
                 or s == "ㄷㅇ"
-            ):
-                # help 명령어 처리
+            ):  # 도움말 명령어 처리
                 self.print_help()
                 continue
-            else:
+            else:  # 그 외의 명령어 처리
                 gotoxy(55, 21)
                 print("올바른 명령어를 입력해주세요")
                 sleep(1)
@@ -160,19 +161,11 @@ class game:
                 self.player_list[0], self.player_list[1], self.turn
             )
 
-            # 움직일 말 번호 및 어떤 결과로 이동할 지 입력
-
-            # 해당 말이 골인하지 않았고 저장되어있는 결과인가?
-
-            # 말 이동 및 사용한 결과 삭제
-
-            # 상대 말을 잡았는가?
-
+            # move_input 함수로 말을 움직이고 말을 잡았다면 다시 던지기, 그렇지 않으면 턴을 넘김
             if self.move_input(self.player_list[self.turn]) == "catch":
                 continue
 
-        self.game_over()
-        # 승자가 정해졌다면 게임 종료 함수 호출 (추가 요망)
+        self.game_over()  # 승자가 정해지면 while문을 빠져나와 게임 종료
         return 0
 
     def print_help(self):  # 도움말 출력 함수
@@ -188,18 +181,18 @@ class game:
         print("키보드를 통한 명령어 입력 후 Enter 키를 누르면 동작합니다.")
         print("입력한 명령어가 각 프롬프트의 명령어 문법에 위배되는 경우 프로그램이 정상적으로 동작하지 않을 수 있습니다.\n")
         print("esc키를 누르면 이전 화면으로 이동합니다.")
-        keyboard.wait("esc")
+        keyboard.wait("esc")  # esc키를 누를 때까지 대기
         return 0
 
     def move_input(self, player):  # 움직일 말과 사용할 결과를 입력받아서 말을 움직이는 함수
-        ret = ""
+        ret = ""  # 말을 잡았는지 여부를 반환하기 위한 변수
         while player.results:  # player의 결과 리스트가 비었다면 반복 종료
             self.b.show_board(self.player_list[0], self.player_list[1])
             self.b.show_pieces_state(
                 self.player_list[0], self.player_list[1], self.turn
             )
             gotoxy(55, 20)
-            s = input("이동할 말과 적용할 값을 입력하세요(예시: 3 걸): ")
+            s = input("이동할 말과 적용할 값을 입력하세요(예시: 3 걸): ")  # 몇 번 말을 몇 칸 움직일지 입력
             s = s.replace(" ", "")
 
             # 입력받은 명령어 문법 부합 여부 확인
@@ -246,7 +239,9 @@ class game:
                 sleep(1)
                 continue
 
-            moved_value = self.b.move_piece(player.pieces[piece_num], result)
+            moved_value = self.b.move_piece(
+                player.pieces[piece_num], result
+            )  # 말을 움직이고 상태에 따라 GOALIN, MOVE, CATCH중 하나를 반환
             for i in self.player_list:
                 print("팀" + i.get_team())
                 for j in i.get_piecelist():
@@ -254,13 +249,15 @@ class game:
                 print()
             # 말 이동, 이동한 결과 저장
 
-            if moved_value == 0:
+            if moved_value == 0:  # 말 하나가 골인 할때 마다 플레이어가 승리했는지 확인
                 if player.goal_in_piece() == 4:  # 골인한 말이 4개라면 승리
                     self.winner = self.turn
                     return
-            elif moved_value == 1:
+            elif moved_value == 1:  # 말을 움직였을 때
                 continue
-            elif moved_value == 2 and (result >= 1 and result <= 3):
+            elif moved_value == 2 and (
+                result >= 1 and result <= 3
+            ):  # 도, 개, 걸로 말을 잡았을 때
                 ret = "catch"
                 return ret
 
@@ -281,7 +278,7 @@ class game:
     def game_over(self):  # 승리 조건을 판단하고 게임을 종료
         if self.winner is not None:
             os.system("cls")
-            print(self.player_list[self.winner].team, "의 승리!!")
+            print(self.player_list[self.winner].team, "의 승리!!")  # 승리한 팀 출력
             sleep(3)
             return 0
 
@@ -291,7 +288,7 @@ class game:
         else:
             self.turn = 1
 
-    def game_title(self):
+    def game_title(self):  # 게임 타이틀 출력
         cursor_x = 25
         cursor_y = 6
 
@@ -330,7 +327,7 @@ class game:
                 sleep(1)
                 os.system("cls")
 
-                return 0  # 리턴 값으로 다른 동작 수행?
+                return 0
 
             elif input_key == "enter" and cursor_y == 8:  # QUIT
                 os.system("cls")
