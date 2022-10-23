@@ -43,7 +43,7 @@ class game:  # 게임 클래스
         player_idx = 0
         while player_idx < 2:  # 플레이어 객체 생성(2명)
             os.system("cls")  # player1 생성
-            player_name = input(f"Player {player_idx+1}의 이름을 입력해주세요 :")
+            player_name = input(f"Player {player_idx+1}의 이름을 입력해주세요 :").strip()
             if player_name == "" or len(player_name) > 10:
                 print("이름은 1자 이상 10자 이하로 입력해주세요.")
                 sleep(2)
@@ -65,9 +65,7 @@ class game:  # 게임 클래스
             )
 
             gotoxy(55, 20)
-            print("던지기: ")  # 던지기 입력 대기
-            gotoxy(63, 20)
-            s = input()  # 윷 던지는 변수 아래는 예외 처리
+            s = input("커맨드를 입력하세요.: ").strip().lower()  # 윷 던지는 변수 아래는 예외 처리 #공백 제거
             if (
                 s == "던지기"
                 or s == "던지"
@@ -125,7 +123,7 @@ class game:  # 게임 클래스
                 while True:
                     os.system("cls")
 
-                    input_key = input("중도 포기할 시 패배 처리됩니다. 정말 포기하시겠습니까? (Y/N)")
+                    input_key = input("중도 포기할 시 패배 처리됩니다. 정말 포기하시겠습니까? (Y/N)").strip()
                     sleep(0.2)
                     if input_key == "Y" or input_key == "y":
                         self.change_turn()
@@ -153,9 +151,17 @@ class game:  # 게임 클래스
             else:  # 그 외의 명령어 처리
                 gotoxy(55, 21)
                 print("올바른 명령어를 입력해주세요")
-                sleep(1)
+                gotoxy(55, 22)
+                print("명령어군        | 올바른 인자 | 설명")
+                gotoxy(55, 23)
+                print("throw   던지기  |             | 윷을 던집니다.")
+                gotoxy(55, 24)
+                print("/ff       항복  |  인자없음   | 항복한 플레이어의 패배")
+                gotoxy(55, 25)
+                print("help    도움말  |             | 전체 혹은 명령어별 도움말을 출력합니다.")
+                sleep(2)
                 continue  # 윷 던지기 끝
-            os.system("cls")
+            # os.system("cls")
             self.b.show_board(self.player_list[0], self.player_list[1])
             self.b.show_pieces_state(
                 self.player_list[0], self.player_list[1], self.turn
@@ -163,6 +169,9 @@ class game:  # 게임 클래스
 
             # move_input 함수로 말을 움직이고 말을 잡았다면 다시 던지기, 그렇지 않으면 턴을 넘김
             if self.move_input(self.player_list[self.turn]) == "catch":
+                gotoxy(55, 22)
+                print("상대편의 말을 잡았습니다.")
+                sleep(1)
                 continue
 
         self.game_over()  # 승자가 정해지면 while문을 빠져나와 게임 종료
@@ -210,7 +219,7 @@ class game:  # 게임 클래스
                         result = player.results.pop()  # 결과 리스트에 있던 결과를 움직일 결과로 pop
                     else:  # 아니면 문법 위배
                         gotoxy(55, 21)
-                        print("적용할 결과를 입력해주세요.")
+                        print("저장된 값이 2개 이상입니다. 값을 특정해주세요.")
                         sleep(1)
                         continue
                 elif len(s) > 2:  # 사용자 명령어가 공백 미포함 2글자 초과 시 위배
@@ -222,6 +231,9 @@ class game:  # 게임 클래스
                     result = player.results.pop(
                         player.results.index(s[1])
                     )  # 두번째 글자는 움직일 결과
+                gotoxy(55, 21)
+                print(f"{piece_num+1}번 말을 {result}만큼 이동합니다.")
+                sleep(1)
                 if result == "도":
                     result = 1
                 elif result == "개":
@@ -242,11 +254,11 @@ class game:  # 게임 클래스
             moved_value = self.b.move_piece(
                 player.pieces[piece_num], result
             )  # 말을 움직이고 상태에 따라 GOALIN, MOVE, CATCH중 하나를 반환
-            for i in self.player_list:
-                print("팀" + i.get_team())
-                for j in i.get_piecelist():
-                    print(j.get_index())
-                print()
+            # for i in self.player_list:
+            #     print("★팀" + i.get_team())
+            #     for j in i.get_piecelist():   #단위별 검사
+            #         print(j.get_index())
+            #     print()
             # 말 이동, 이동한 결과 저장
 
             if moved_value == 0:  # 말 하나가 골인 할때 마다 플레이어가 승리했는지 확인
