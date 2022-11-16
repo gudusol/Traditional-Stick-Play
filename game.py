@@ -28,14 +28,12 @@ class game:  # 게임 클래스
     turn = 0  # 현재 턴 int형 변수, 1p부터 시작함, 2p turn은 2
     yut_list = []  # yut 객체를 담을 리스트
     b = None  # board 객체
-    player_list = []  # player 객체를 담을 리스트
 
     def __init__(self):  # 게임 객체 생성자
         self.winner = None
         self.turn = 0
         self.yut_list = [yut(), yut(), yut(), yut()]
         self.b = board()
-        self.player_list = []
 
     def game_start(self):  # 게임을 구동하는 함수
         self.game_title()  # 게임 타이틀 메뉴 출력
@@ -43,27 +41,31 @@ class game:  # 게임 클래스
         player_idx = 0
         while player_idx < 2:  # 플레이어 객체 생성(2명)
             os.system("cls")  # player1 생성
+            flush_input()
             player_name = input(f"Player {player_idx+1}의 이름을 입력해주세요 :").strip()
+            sleep(0.2)
             if player_name == "" or len(player_name) > 10:
                 print("이름은 1자 이상 10자 이하로 입력해주세요.")
                 sleep(2)
                 continue
             if player_idx == 1:
-                if self.player_list[0].get_team() == player_name:
+                if self.b.player_list[0].get_team() == player_name:
                     print("이미 같은 이름의 팀이 있습니다.")
                     sleep(2)
                     continue
             player_idx += 1
-            self.player_list.append(player(player_name))
+            p = player(player_name)
+            self.b.player_list.append(p)
 
+            self.select_player_color(p) # player color 선택
+        flush_input()
         os.system("cls")
 
         while self.winner is None:  # winner가 정해졌다면 게임 종료후 게임 타이틀 메뉴로 돌아감
-            self.b.show_board(self.player_list[0], self.player_list[1])
+            self.b.show_board()
             self.b.show_pieces_state(
-                self.player_list[0], self.player_list[1], self.turn
+                self.turn
             )
-
             gotoxy(55, 20)
             s = input("커맨드를 입력하세요.: ").strip().lower()  # 윷 던지는 변수 아래는 예외 처리 #공백 제거
             if (
@@ -79,17 +81,17 @@ class game:  # 게임 클래스
                 or s == "th"
                 or s == "t"
             ):
-                self.player_list[self.turn].results.append(
-                    self.player_list[self.turn].throw(self.yut_list)
+                self.b.player_list[self.turn].results.append(
+                    self.b.player_list[self.turn].throw(self.yut_list)
                 )
 
                 if (
-                    self.player_list[self.turn].results[
-                        len(self.player_list[self.turn].results) - 1
+                    self.b.player_list[self.turn].results[
+                        len(self.b.player_list[self.turn].results) - 1
                     ]
                     == "윷"
-                    or self.player_list[self.turn].results[
-                        len(self.player_list[self.turn].results) - 1
+                    or self.b.player_list[self.turn].results[
+                        len(self.b.player_list[self.turn].results) - 1
                     ]
                     == "모"
                 ):  # 윷이나 모가 나왔을 때 값을 저장하고 한 번 더 던짐
@@ -97,8 +99,8 @@ class game:  # 게임 클래스
                     print(
                         "%s! 한 번더~"
                         % (
-                            self.player_list[self.turn].results[
-                                len(self.player_list[self.turn].results) - 1
+                            self.b.player_list[self.turn].results[
+                                len(self.b.player_list[self.turn].results) - 1
                             ]
                         )
                     )
@@ -109,8 +111,8 @@ class game:  # 게임 클래스
                     print(
                         "%s!"
                         % (
-                            self.player_list[self.turn].results[
-                                len(self.player_list[self.turn].results) - 1
+                            self.b.player_list[self.turn].results[
+                                len(self.b.player_list[self.turn].results) - 1
                             ]
                         )
                     )
@@ -162,13 +164,13 @@ class game:  # 게임 클래스
                 sleep(2)
                 continue  # 윷 던지기 끝
             # os.system("cls")
-            self.b.show_board(self.player_list[0], self.player_list[1])
+            self.b.show_board()
             self.b.show_pieces_state(
-                self.player_list[0], self.player_list[1], self.turn
+                self.turn
             )
 
             # move_input 함수로 말을 움직이고 말을 잡았다면 다시 던지기, 그렇지 않으면 턴을 넘김
-            if self.move_input(self.player_list[self.turn]) == "catch":
+            if self.move_input(self.b.player_list[self.turn]) == "catch":
                 gotoxy(55, 22)
                 print("상대편의 말을 잡았습니다.")
                 sleep(1)
@@ -193,12 +195,93 @@ class game:  # 게임 클래스
         keyboard.wait("esc")  # esc키를 누를 때까지 대기
         return 0
 
+    def select_player_color(self, player: player):  # player color 정하는 함수
+        cursor_x = 33
+        cursor_y = 6
+
+        while True:
+            os.system("cls")
+            print(f"\n\n\t\t{player.get_team()}의 색상을 골라주세요\n\n\n")
+            print("\t\t\t\033[31m" + "RED" + "\033[0m\n")
+            print("\t\t\t\033[34m" + "BLUE" + "\033[0m\n")
+            print("\t\t\t\033[32m" + "GREEN" + "\033[0m\n")
+            print("\t\t\t\033[33m" + "YELLOW" + "\033[0m\n")
+            gotoxy(cursor_x, cursor_y)
+            print("◀")
+            gotoxy(cursor_x, cursor_y)
+            flush_input()
+            input_key = keyboard.read_key()
+            sleep(0.2)
+
+            if input_key == "down" and cursor_y < 12:  # 아래쪽 방향키 입력
+                print("  ")
+                gotoxy(cursor_x, cursor_y)
+                cursor_y += 2
+                print("◀")
+                gotoxy(cursor_x, cursor_y)
+            elif input_key == "up" and cursor_y > 6:  # 위쪽 방향키 입력
+                print("  ")
+                gotoxy(cursor_x, cursor_y)
+                cursor_y -= 2
+                print("◀")
+                gotoxy(cursor_x, cursor_y)
+            elif input_key == "enter" and cursor_y == 6:  # red 선택
+                sleep(0.2)
+                os.system("cls")
+                if "\033[31m" in self.b.color_dic.values():
+                    print("\n\n\n\n\n\t\t다른 플레이어가 이미 고른 색상입니다")
+                else:
+                    player.set_color("\033[31m")  # player, board 둘다 저장?
+                    self.b.color_dic[player.get_team()] = "\033[31m"
+                    print("\n\n\n\n\n\t\t색상 선택이 완료되었습니다")
+                    sleep(1)
+                    return 0
+                sleep(1)
+            elif input_key == "enter" and cursor_y == 8:  # blue 선택
+                sleep(0.2)
+                os.system("cls")
+                if "\033[34m" in self.b.color_dic.values():
+                    print("\n\n\n\n\n\t\t다른 플레이어가 이미 고른 색상입니다")
+                else:
+                    player.set_color("\033[34m")
+                    self.b.color_dic[player.get_team()] = "\033[34m"
+                    print("\n\n\n\n\n\t\t색상 선택이 완료되었습니다")
+                    sleep(1)
+                    return 0
+                sleep(1)
+            elif input_key == "enter" and cursor_y == 10:  # green 선택
+                sleep(0.2)
+                os.system("cls")
+                if "\033[32m" in self.b.color_dic.values():
+                    print("\n\n\n\n\n\t\t다른 플레이어가 이미 고른 색상입니다")
+                else:
+                    player.set_color("\033[32m")
+                    self.b.color_dic[player.get_team()] = "\033[32m"
+                    print("\n\n\n\n\n\t\t색상 선택이 완료되었습니다")
+                    sleep(1)
+                    return 0
+                sleep(1)
+            elif input_key == "enter" and cursor_y == 12:  # yellow 선택
+                sleep(0.2)
+                os.system("cls")
+                if "\033[33m" in self.b.color_dic.values():
+                    print("\n\n\n\n\n\t\t다른 플레이어가 이미 고른 색상입니다")
+                else:
+                    player.set_color("\033[33m")
+                    self.b.color_dic[player.get_team()] = "\033[33m"
+                    print("\n\n\n\n\n\t\t색상 선택이 완료되었습니다")
+                    sleep(1)
+                    return 0
+                sleep(1)
+
+        return 0
+
     def move_input(self, player):  # 움직일 말과 사용할 결과를 입력받아서 말을 움직이는 함수
         ret = ""  # 말을 잡았는지 여부를 반환하기 위한 변수
         while player.results:  # player의 결과 리스트가 비었다면 반복 종료
-            self.b.show_board(self.player_list[0], self.player_list[1])
+            self.b.show_board()
             self.b.show_pieces_state(
-                self.player_list[0], self.player_list[1], self.turn
+                self.turn
             )
             gotoxy(55, 20)
             s = input("이동할 말과 적용할 값을 입력하세요(예시: 3 걸): ")  # 몇 번 말을 몇 칸 움직일지 입력

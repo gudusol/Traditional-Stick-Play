@@ -6,6 +6,7 @@ class player:
     team = ""  # 팀 이름
     pieces = []  # 4개의 말을 관리하는 리스트
     results = []  # 윷 던진 결과 임시저장 리스트 추가
+    color = ""  # 색깔
 
     def __init__(self, team):  # 팀 이름을 받아서 초기화
         self.team = str(team)
@@ -48,3 +49,7 @@ class player:
 
     def get_piecelist(self):  # 말 리스트 반환
         return self.pieces
+
+    def set_color(self, color):
+        self.color = color
+        return
