@@ -106,6 +106,24 @@ class game:  # 게임 클래스
                     )
                     sleep(0.5)
                     continue
+                elif (
+                    self.player_list[self.turn].results[
+                        len(self.player_list[self.turn].results) - 1
+                    ]
+                    == "낙"
+                ):  # 결과가 낙일 시 결과리스트에서 삭제
+                    gotoxy(55, 19)
+                    print(
+                        "%s!"
+                        % (
+                            self.player_list[self.turn].results.pop(
+                                len(self.player_list[self.turn].results) - 1
+                            )
+                        )
+                    )
+                    gotoxy(35, 12)
+                    sleep(0.5)
+
                 else:  # 도, 개, 걸일 때는 값을 저장하고 아래 쪽 move_input 함수로 넘어감
                     gotoxy(55, 19)
                     print(
@@ -327,6 +345,8 @@ class game:  # 게임 클래스
                     result = 4
                 elif result == "모":
                     result = 5
+                elif result == "빽도":
+                    result = -1
 
             except:
                 gotoxy(55, 21)
