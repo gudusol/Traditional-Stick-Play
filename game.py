@@ -57,15 +57,13 @@ class game:  # 게임 클래스
             p = player(player_name)
             self.b.player_list.append(p)
 
-            self.select_player_color(p) # player color 선택
+            self.select_player_color(p)  # player color 선택
         flush_input()
         os.system("cls")
 
         while self.winner is None:  # winner가 정해졌다면 게임 종료후 게임 타이틀 메뉴로 돌아감
             self.b.show_board()
-            self.b.show_pieces_state(
-                self.turn
-            )
+            self.b.show_pieces_state(self.turn)
             gotoxy(55, 20)
             s = input("커맨드를 입력하세요.: ").strip().lower()  # 윷 던지는 변수 아래는 예외 처리 #공백 제거
             if (
@@ -81,61 +79,52 @@ class game:  # 게임 클래스
                 or s == "th"
                 or s == "t"
             ):
-                self.b.player_list[self.turn].results.append(
-                    self.b.player_list[self.turn].throw(self.yut_list)
-                )
+                cur_player = self.b.player_list[self.turn]
+                cur_player.throw(self.yut_list)
+                cur_result = self.b.player_list[self.turn].results[-1]
 
                 if (
-                    self.b.player_list[self.turn].results[
-                        len(self.b.player_list[self.turn].results) - 1
-                    ]
-                    == "윷"
-                    or self.b.player_list[self.turn].results[
-                        len(self.b.player_list[self.turn].results) - 1
-                    ]
-                    == "모"
+                    cur_result == "윷" or cur_result == "모"
                 ):  # 윷이나 모가 나왔을 때 값을 저장하고 한 번 더 던짐
                     gotoxy(55, 19)
-                    print(
-                        "%s! 한 번더~"
-                        % (
-                            self.b.player_list[self.turn].results[
-                                len(self.b.player_list[self.turn].results) - 1
-                            ]
-                        )
-                    )
+                    print(f"{cur_result}! 한 번더~")
                     sleep(0.5)
                     continue
-                elif (
-                    self.player_list[self.turn].results[
-                        len(self.player_list[self.turn].results) - 1
-                    ]
-                    == "낙"
-                ):  # 결과가 낙일 시 결과리스트에서 삭제
+                elif cur_result == "낙":  # 결과가 낙일 시 결과리스트에서 삭제
                     gotoxy(55, 19)
-                    print(
-                        "%s!"
-                        % (
-                            self.player_list[self.turn].results.pop(
-                                len(self.player_list[self.turn].results) - 1
-                            )
-                        )
-                    )
+                    print("낙!")
+                    self.b.player_list[self.turn].results.pop()
+                    gotoxy(35, 12)
+                    sleep(0.5)
+                else:  # 도, 개, 걸일 때는 값을 저장하고 아래 쪽 move_input 함수로 넘어감
+                    gotoxy(55, 19)
+                    print(f"{cur_result}!")
                     gotoxy(35, 12)
                     sleep(0.5)
 
-                else:  # 도, 개, 걸일 때는 값을 저장하고 아래 쪽 move_input 함수로 넘어감
-                    gotoxy(55, 19)
-                    print(
-                        "%s!"
-                        % (
-                            self.b.player_list[self.turn].results[
-                                len(self.b.player_list[self.turn].results) - 1
-                            ]
-                        )
-                    )
-                    gotoxy(35, 12)
-                    sleep(0.5)
+            elif s == "빽도":
+                self.b.player_list[self.turn].results.append(s)
+                gotoxy(55, 19)
+                print(f"{s}!")
+                gotoxy(35, 12)
+                sleep(0.5)
+            elif s == "낙":
+                gotoxy(55, 19)
+                print("낙!")
+                gotoxy(35, 12)
+                sleep(0.5)
+            elif s == "도" or s == "개" or s == "걸":
+                self.b.player_list[self.turn].results.append(s)
+                gotoxy(55, 19)
+                print(f"{s}!")
+                gotoxy(35, 12)
+                sleep(0.5)
+            elif s == "윷" or s == "모":
+                self.b.player_list[self.turn].results.append(s)
+                gotoxy(55, 19)
+                print(f"{cur_result}! 한 번더~")
+                sleep(0.5)
+                continue
 
             elif (
                 s == "/ff" or s == "/gg" or s == "종료" or s == "항복" or s == "ㅈㅈ"
@@ -183,9 +172,7 @@ class game:  # 게임 클래스
                 continue  # 윷 던지기 끝
             # os.system("cls")
             self.b.show_board()
-            self.b.show_pieces_state(
-                self.turn
-            )
+            self.b.show_pieces_state(self.turn)
 
             # move_input 함수로 말을 움직이고 말을 잡았다면 다시 던지기, 그렇지 않으면 턴을 넘김
             if self.move_input(self.b.player_list[self.turn]) == "catch":
@@ -298,9 +285,7 @@ class game:  # 게임 클래스
         ret = ""  # 말을 잡았는지 여부를 반환하기 위한 변수
         while player.results:  # player의 결과 리스트가 비었다면 반복 종료
             self.b.show_board()
-            self.b.show_pieces_state(
-                self.turn
-            )
+            self.b.show_pieces_state(self.turn)
             gotoxy(55, 20)
             s = input("이동할 말과 적용할 값을 입력하세요(예시: 3 걸): ")  # 몇 번 말을 몇 칸 움직일지 입력
             s = s.replace(" ", "")
@@ -371,7 +356,7 @@ class game:  # 게임 클래스
             elif moved_value == 1:  # 말을 움직였을 때
                 continue
             elif moved_value == 2 and (
-                result >= 1 and result <= 3
+                result >= -1 and result <= 3
             ):  # 도, 개, 걸로 말을 잡았을 때
                 ret = "catch"
                 return ret
