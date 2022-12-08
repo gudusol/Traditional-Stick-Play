@@ -28,14 +28,15 @@ class player:
         # 윷 던진 결과 임시저장 리스트에 추가
         li = [i.throw() for i in yut_list]
 
-        # 윷 결과에 따라 도, 개,ㄱ, 윷, 모를 반환
+        # 윷 결과에 따라 도, 개, 걸, 윷, 모를 반환
         if li.count("등") == 4:
             return "모"
         elif li.count("등") == 3:
             ran = random.randrange(1, 5)
             if ran == 1:
                 return "빽도"
-            return "도"
+            else:
+                return "도"
         elif li.count("등") == 2:
             return "개"
         elif li.count("등") == 1:

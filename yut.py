@@ -8,8 +8,8 @@ class yut:
         return self.value
 
     def throw(self):  # 윷 객체의 값을 정해진 확률에 따라 랜덤으로 설정
-        ran = random.randrange(1, 4)
-        if ran == 1:
+        ran = random.randrange(1, 6)
+        if ran >= 1 and ran <= 2:
             self.value = "등"
         else:
             self.value = "배"
