@@ -2,6 +2,8 @@ from game import game
 from board import board
 from player import player
 import os
+import pickle
+
 
 cmd = "mode 130, 40"  # 콘솔 사이즈 조절
 os.system(cmd)

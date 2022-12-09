@@ -2,12 +2,14 @@ from tile import tile
 from player import player
 from piece import piece
 from gotoxy import gotoxy
+import unicodedata
 import os
 
 # 말이 움직인 결과에 따라 값을 반환하기 위한 상수
 GOALIN = 0
 MOVE = 1
 CATCH = 2
+
 
 class board:
     tile_list = []  # 칸의 배열
@@ -92,14 +94,34 @@ class board:
         if num_of_pieces == 0:  # 말이 없을 때
             print("■  ", end="")
         else:  # 말이 있을 때, 말의 갯수에 따라 다른 숫자를 출력, 말의 팀에 따라 다른 색깔을 출력
-            if num_of_pieces == 1: #color_dic의 키값으로 value를 접근
-                print(self.color_dic[self.tile_list[idx - 1].pieces[0].get_team()] + "❶  " + "\033[0m", end="")  # reset
+            if num_of_pieces == 1:  # color_dic의 키값으로 value를 접근
+                print(
+                    self.color_dic[self.tile_list[idx - 1].pieces[0].get_team()]
+                    + "❶  "
+                    + "\033[0m",
+                    end="",
+                )  # reset
             elif num_of_pieces == 2:
-                print(self.color_dic[self.tile_list[idx - 1].pieces[0].get_team()] + "❷  " + "\033[0m", end="")
+                print(
+                    self.color_dic[self.tile_list[idx - 1].pieces[0].get_team()]
+                    + "❷  "
+                    + "\033[0m",
+                    end="",
+                )
             elif num_of_pieces == 3:
-                print(self.color_dic[self.tile_list[idx - 1].pieces[0].get_team()] + "❸  " + "\033[0m", end="")
+                print(
+                    self.color_dic[self.tile_list[idx - 1].pieces[0].get_team()]
+                    + "❸  "
+                    + "\033[0m",
+                    end="",
+                )
             else:
-                print(self.color_dic[self.tile_list[idx - 1].pieces[0].get_team()] + "❹  " + "\033[0m", end="")
+                print(
+                    self.color_dic[self.tile_list[idx - 1].pieces[0].get_team()]
+                    + "❹  "
+                    + "\033[0m",
+                    end="",
+                )
 
     def show_board(self):  # 보드를 출력하는 함수
         os.system("cls")
@@ -146,15 +168,13 @@ class board:
             self.print_tile(15 + i)
         print()
 
-    def show_pieces_state(
-        self, turn
-    ):  # 현황판 출력하는 함수 (말의 상태, 팀, 턴)
+    def show_pieces_state(self, turn):  # 현황판 출력하는 함수 (말의 상태, 팀, 턴)
         x = 55
         y = 10
         x_temp = 0
 
         # 각 플레이어의 말 상태 출력
-        for i in self.player_list: # 저장된 플레이어 객체 순서대로 출력
+        for i in self.player_list:  # 저장된 플레이어 객체 순서대로 출력
             gotoxy(x + x_temp, y)
             print(self.color_dic[i.get_team()] + i.get_team() + " 팀")
             player_piece_list = i.get_piecelist()
@@ -167,11 +187,14 @@ class board:
                 )
                 print(f"{j + 1} 번 말 : {print_idx}")
             print("\033[0m")
-            x_temp += 13
+            x_temp += 25
 
         # 현재 턴인 플레이어의 윷 결과 출력
         gotoxy(x, y + 6)
-        print(self.color_dic[self.player_list[turn].get_team()] + self.player_list[turn].get_team() + "[%s의 던진 윷 현황]" % self.player_list[turn].get_team())
+        print(
+            self.color_dic[self.player_list[turn].get_team()]
+            + f"[{self.player_list[turn].get_team()}의 던진 윷 현황]"
+        )
         gotoxy(x, y + 7)
         print(self.player_list[turn].results)
         print("\033[0m")

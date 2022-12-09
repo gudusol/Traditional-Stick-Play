@@ -6,9 +6,12 @@ from player import player
 from time import sleep
 from gotoxy import gotoxy
 import os
+import pickle
 
 x = 10  # gotoxy x좌표
 y = 1  # gotoxy y좌표
+WIDE_MAP = {i: i + 0xFEE0 for i in range(0x21, 0x7F)}
+WIDE_MAP[0x20] = 0x3000
 
 
 def flush_input():  # 입력 버퍼 비우기
@@ -25,7 +28,7 @@ def flush_input():  # 입력 버퍼 비우기
 
 class game:  # 게임 클래스
     winner = None  # 승리자 string형 변수 처음에는 null
-    turn = 0  # 현재 턴 int형 변수, 1p부터 시작함, 2p turn은 2
+    turn = 0  # 현재 턴 int형 변수, 1p부터 시작함, 2p turn은 1
     yut_list = []  # yut 객체를 담을 리스트
     b = None  # board 객체
 
@@ -35,6 +38,9 @@ class game:  # 게임 클래스
         self.yut_list = [yut(), yut(), yut(), yut()]
         self.b = board()
 
+    def widen(self, s):  # full-width character로 변환
+        return s.translate(WIDE_MAP)
+
     def game_start(self):  # 게임을 구동하는 함수
         self.game_title()  # 게임 타이틀 메뉴 출력
         flush_input()
@@ -42,7 +48,9 @@ class game:  # 게임 클래스
         while player_idx < 2:  # 플레이어 객체 생성(2명)
             os.system("cls")  # player1 생성
             flush_input()
-            player_name = input(f"Player {player_idx+1}의 이름을 입력해주세요 :").strip()
+            player_name = self.widen(
+                input(f"Player {player_idx+1}의 이름을 입력해주세요 :").strip()
+            )
             sleep(0.2)
             if player_name == "" or len(player_name) > 10:
                 print("이름은 1자 이상 10자 이하로 입력해주세요.")
@@ -56,7 +64,6 @@ class game:  # 게임 클래스
             player_idx += 1
             p = player(player_name)
             self.b.player_list.append(p)
-
             self.select_player_color(p)  # player color 선택
         flush_input()
         os.system("cls")
@@ -122,7 +129,7 @@ class game:  # 게임 클래스
             elif s == "윷" or s == "모":
                 self.b.player_list[self.turn].results.append(s)
                 gotoxy(55, 19)
-                print(f"{cur_result}! 한 번더~")
+                print(f"{s}! 한 번더~")
                 sleep(0.5)
                 continue
 
@@ -157,6 +164,24 @@ class game:  # 게임 클래스
             ):  # 도움말 명령어 처리
                 self.print_help()
                 continue
+            elif s == "저장":
+                game_data = {}
+                for i in range(2):
+                    p_data = {
+                        "name": self.b.player_list[i].team,
+                        "color": self.b.player_list[i].color,
+                        "pieces": [
+                            self.b.player_list[i].pieces[j].get_index()
+                            for j in range(4)
+                        ],
+                        "results": self.b.player_list[i].results,
+                        "turn": self.turn == i if True else False,
+                    }
+                    game_data["player" + str(i + 1)] = p_data
+                with open("save_data.pickle", "wb") as fw:
+                    pickle.dump(game_data, fw)
+                exit(0)
+
             else:  # 그 외의 명령어 처리
                 gotoxy(55, 21)
                 print("올바른 명령어를 입력해주세요")
