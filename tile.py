@@ -6,11 +6,12 @@ class tile:
     pieces = []  # 칸에 있는 말들
 
     def __init__(self, index):  # 칸의 인덱스를 받아 초기화
-        self.pieces = [piece("a")]
-        self.pieces.pop()
+        # self.pieces = [piece("a")]
+        # self.pieces.pop()
         self.index = index
-        self.pieces = [piece(" ")]
-        self.pieces.clear()
+        self.pieces = []
+        # self.pieces = [piece(" ")]
+        # self.pieces.clear()
 
     def get_num_pieces(self):  # 칸에 있는 말의 개수를 반환
         return len(self.pieces)

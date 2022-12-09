@@ -14,17 +14,36 @@ CATCH = 2
 class board:
     tile_list = []  # 칸의 배열
     team_list = []  # 팀을 저장하는 배열
-    color_dic = {}  # 색깔을 저장하는 딕셔너리
     player_list = []  # player 객체를 담을 리스트
 
-    def __init__(self):  # 보드 생성
-        self.color_dic = {}
-        self.player_list = [player("")]
-        self.player_list.pop()
+    # def __init__(self):  # 보드 생성
+    #     self.player_list = [player("")]
+    #     self.player_list.pop()
+    #     self.tile_list = [tile(-1)]
+    #     self.tile_list.pop()
+    #     for i in range(29):
+    #         self.tile_list.append(tile(i + 1))  # 칸의 배열 초기화
+
+    def __init__(self, player_list):  # 플레이어 리스트가 존재하는 상태에서 보드 생성
+        self.player_list = player_list
         self.tile_list = [tile(-1)]
         self.tile_list.pop()
         for i in range(29):
-            self.tile_list.append(tile(i + 1))  # 칸의 배열 초기화
+            self.tile_list.append(tile(i + 1))
+
+    # def __init__(self, game_data):  # 생성자 오버로딩: 저장 데이터를 불러올 때
+    #     p1 = game_data["player1"]
+    #     p2 = game_data["player2"]
+
+    #     # self.color_dic = {p1["name"]: p1["color"], p2["name"]: p2["color"]}
+    #     self.player_list = [
+    #         player(p1["name"], p1["pieces"], p1["yut_result"]),
+    #         player(p2["name"], p2["pieces"], p2["yut_result"]),
+    #     ]
+    #     self.tile_list = [tile(-1)]
+    #     self.tile_list.pop()
+    #     for i in range(29):
+    #         self.tile_list.append(tile(i + 1))
 
     def move_piece(self, piece: piece, yut_result):  # 말을 움직이는 함수
         dest = 0  # 도착지의 인덱스
@@ -94,32 +113,33 @@ class board:
         if num_of_pieces == 0:  # 말이 없을 때
             print("■  ", end="")
         else:  # 말이 있을 때, 말의 갯수에 따라 다른 숫자를 출력, 말의 팀에 따라 다른 색깔을 출력
+            cur_color = ""
+            if (
+                self.player_list[0].get_team()
+                == self.tile_list[idx - 1].pieces[0].get_team()
+            ):
+                cur_color = self.player_list[0].get_color()
+            else:
+                cur_color = self.player_list[1].get_color()
+
             if num_of_pieces == 1:  # color_dic의 키값으로 value를 접근
                 print(
-                    self.color_dic[self.tile_list[idx - 1].pieces[0].get_team()]
-                    + "❶  "
-                    + "\033[0m",
+                    cur_color + "❶  " + "\033[0m",
                     end="",
                 )  # reset
             elif num_of_pieces == 2:
                 print(
-                    self.color_dic[self.tile_list[idx - 1].pieces[0].get_team()]
-                    + "❷  "
-                    + "\033[0m",
+                    cur_color + "❷  " + "\033[0m",
                     end="",
                 )
             elif num_of_pieces == 3:
                 print(
-                    self.color_dic[self.tile_list[idx - 1].pieces[0].get_team()]
-                    + "❸  "
-                    + "\033[0m",
+                    cur_color + "❸  " + "\033[0m",
                     end="",
                 )
             else:
                 print(
-                    self.color_dic[self.tile_list[idx - 1].pieces[0].get_team()]
-                    + "❹  "
-                    + "\033[0m",
+                    cur_color + "❹  " + "\033[0m",
                     end="",
                 )
 
@@ -175,8 +195,9 @@ class board:
 
         # 각 플레이어의 말 상태 출력
         for i in self.player_list:  # 저장된 플레이어 객체 순서대로 출력
+            cur_color = i.get_color()
             gotoxy(x + x_temp, y)
-            print(self.color_dic[i.get_team()] + i.get_team() + " 팀")
+            print(cur_color + i.get_team() + " 팀")
             player_piece_list = i.get_piecelist()
             for j in range(len(player_piece_list)):
                 gotoxy(x + x_temp, y + 1 + j)
@@ -192,7 +213,7 @@ class board:
         # 현재 턴인 플레이어의 윷 결과 출력
         gotoxy(x, y + 6)
         print(
-            self.color_dic[self.player_list[turn].get_team()]
+            self.player_list[turn].get_color()
             + f"[{self.player_list[turn].get_team()}의 던진 윷 현황]"
         )
         gotoxy(x, y + 7)

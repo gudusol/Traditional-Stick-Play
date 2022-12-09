@@ -9,15 +9,15 @@ class player:
     results = []  # 윷 던진 결과 임시저장 리스트 추가
     color = ""  # 색깔
 
-    def __init__(self, team):  # 팀 이름을 받아서 초기화
+    def __init__(self, team, pieces, yut_result):  # 생성자 오버로딩: 저장 데이터를 불러올 때
         self.team = str(team)
         self.pieces = [
-            piece(self.team),
-            piece(self.team),
-            piece(self.team),
-            piece(self.team),
+            piece(self.team, pieces[0]),
+            piece(self.team, pieces[1]),
+            piece(self.team, pieces[2]),
+            piece(self.team, pieces[3]),
         ]
-        self.results = []
+        self.results = yut_result
 
     def throw(self, yut_list):  # 윷 던지기
 
@@ -47,6 +47,10 @@ class player:
                 exit(-1)
         self.results.append(result)
 
+    def set_team(self, team):
+        self.team = team
+        return 0
+
     def get_team(self):  # 팀 이름 반환
         return self.team
 
@@ -63,3 +67,6 @@ class player:
     def set_color(self, color):
         self.color = color
         return
+
+    def get_color(self):
+        return self.color
