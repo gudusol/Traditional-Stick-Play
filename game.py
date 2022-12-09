@@ -174,7 +174,7 @@ class game:  # 게임 클래스
                             self.b.player_list[i].pieces[j].get_index()
                             for j in range(4)
                         ],
-                        "results": self.b.player_list[i].results,
+                        "yut_results": self.b.player_list[i].results,
                         "turn": self.turn == i if True else False,
                     }
                     game_data["player" + str(i + 1)] = p_data
