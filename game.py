@@ -88,11 +88,11 @@ class game:  # 게임 클래스
                     sleep(0.5)
                 elif (
                     cur_result == "빽도"
-                    and len(cur_result) == 1
+                    and len(cur_player.results) == 1
                     and not self.can_move_back(cur_player.get_piecelist())
                 ):  # 결과가 낙일 시 결과리스트에서 삭제
                     gotoxy(55, 19)
-                    print("움직일 수 있는 말이 없습니다.")
+                    print("빽도! 움직일 수 있는 말이 없습니다.")
                     cur_player.results.pop()
                     gotoxy(35, 12)
                     sleep(1)
