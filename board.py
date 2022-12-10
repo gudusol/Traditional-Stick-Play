@@ -16,34 +16,16 @@ class board:
     team_list = []  # 팀을 저장하는 배열
     player_list = []  # player 객체를 담을 리스트
 
-    # def __init__(self):  # 보드 생성
-    #     self.player_list = [player("")]
-    #     self.player_list.pop()
-    #     self.tile_list = [tile(-1)]
-    #     self.tile_list.pop()
-    #     for i in range(29):
-    #         self.tile_list.append(tile(i + 1))  # 칸의 배열 초기화
-
     def __init__(self, player_list):  # 플레이어 리스트가 존재하는 상태에서 보드 생성
         self.player_list = player_list
         self.tile_list = [tile(-1)]
         self.tile_list.pop()
         for i in range(29):
             self.tile_list.append(tile(i + 1))
-
-    # def __init__(self, game_data):  # 생성자 오버로딩: 저장 데이터를 불러올 때
-    #     p1 = game_data["player1"]
-    #     p2 = game_data["player2"]
-
-    #     # self.color_dic = {p1["name"]: p1["color"], p2["name"]: p2["color"]}
-    #     self.player_list = [
-    #         player(p1["name"], p1["pieces"], p1["yut_result"]),
-    #         player(p2["name"], p2["pieces"], p2["yut_result"]),
-    #     ]
-    #     self.tile_list = [tile(-1)]
-    #     self.tile_list.pop()
-    #     for i in range(29):
-    #         self.tile_list.append(tile(i + 1))
+        for player in self.player_list:
+            for piece in player.get_piecelist():
+                if piece.get_index() > 0 and piece.get_index() < 30:
+                    self.tile_list[piece.get_index() - 1].reach_piece(piece)
 
     def move_piece(self, piece: piece, yut_result):  # 말을 움직이는 함수
         dest = 0  # 도착지의 인덱스

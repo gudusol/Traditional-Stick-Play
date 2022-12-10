@@ -153,9 +153,9 @@ def print_help():  # 도움말 출력 함수
 
 
 def game_title():  # 게임 타이틀 출력
+    flush_input()
     cursor_x = 25
     cursor_y = 6
-
     while True:
         os.system("cls")
         print("\n\n\t\tTRADITIONAL-STICK-PLAY\n\n\n")
@@ -168,6 +168,7 @@ def game_title():  # 게임 타이틀 출력
         gotoxy(cursor_x, cursor_y)
         input_key = keyboard.read_key()
         sleep(0.2)
+        flush_input()
 
         if input_key == "down" and cursor_y < 11:  # 아래쪽 방향키 입력
             print("  ")
