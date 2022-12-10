@@ -257,7 +257,7 @@ class game:  # 게임 클래스
                         continue
                     else:
                         result = player.results.pop(player.results.index(s[1:]))
-                if len(s) == 1:  # 사용자가 움직일 말만 입력했을 시
+                elif len(s) == 1:  # 사용자가 움직일 말만 입력했을 시
                     if len(player.results) == 1:  # 결과 리스트에 하나뿐이라면 문법 부합
                         if player.results[0] == "빽도" and not self.can_move_back(
                             [player.pieces[piece_num]]
