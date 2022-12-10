@@ -7,6 +7,7 @@ from time import sleep
 from gotoxy import gotoxy
 import os
 import pickle
+import title
 
 x = 10  # gotoxy x좌표
 y = 1  # gotoxy y좌표
@@ -167,7 +168,7 @@ class game:  # 게임 클래스
                 or s == "ㄷㅇㅁ"
                 or s == "ㄷㅇ"
             ):  # 도움말 명령어 처리
-                self.print_help()
+                title.print_help()
                 continue
             elif (
                 s == "save"
