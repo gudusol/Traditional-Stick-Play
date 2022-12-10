@@ -209,6 +209,8 @@ class game:  # 게임 클래스
                 print("/ff       항복  |  인자없음   | 항복한 플레이어의 패배")
                 gotoxy(55, 25)
                 print("help    도움말  |             | 전체 혹은 명령어별 도움말을 출력합니다.")
+                gotoxy(55, 26)
+                print("save      저장  |             | 현재까지 진행된 데이터를 저장합니다.")
                 sleep(2)
                 continue  # 윷 던지기 끝
             # os.system("cls")
