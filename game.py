@@ -239,7 +239,10 @@ class game:  # 게임 클래스
 
             # 입력받은 명령어 문법 부합 여부 확인
             try:
-                piece_num = int(s[0]) - 1  # 첫번째 글자가 움직일 말의 번호
+                if int(s[0]) == 0:
+                    piece_num = 5
+                else:
+                    piece_num = int(s[0]) - 1  # 첫번째 글자가 움직일 말의 번호
 
                 if player.pieces[piece_num].get_index() >= 30:  # 골인한 말일 시 문법 위배
                     gotoxy(55, 21)
